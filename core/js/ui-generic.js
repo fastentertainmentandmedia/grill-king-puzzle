@@ -9,6 +9,8 @@ export function createUI({ $, limits, fields = [], timer = null, combo = null, h
 
   let rafId = null;
   let lastFastState = false;
+  let prevComboActive = false;
+
 
   function formatTimer(ms) {
     const totalSec = Math.ceil(Math.max(0, ms) / 1000);
@@ -77,12 +79,18 @@ export function createUI({ $, limits, fields = [], timer = null, combo = null, h
         $.comboWrap.classList.add('visible');
         $.comboWrap.classList.add('active-glow');
 
+        if (!prevComboActive) {
+          // первый кадр активного комбо — вспышка
+          $.comboWrap.classList.add('combo-flash');
+          setTimeout(() => $.comboWrap.classList.remove('combo-flash'), 400);
+        }
+
         const remaining = data.endsAt - data.nowMs;
         const ratio = Math.max(0, Math.min(1, remaining / data.duration));
         $.comboFill.style.transform = 'scaleX(' + ratio + ')';
 
         if ($.comboLabel) {
-          $.comboLabel.textContent = (combo.prefix || 'COMBO x') + data.count;
+          $.comboLabel.textContent = (combo.prefix || 'КОМБО');
         }
 
         const isFast = data.duration <= (combo.baseDurationMs || 8000) * 0.6;
@@ -91,14 +99,17 @@ export function createUI({ $, limits, fields = [], timer = null, combo = null, h
           lastFastState = isFast;
         }
       } else {
-        if ($.comboWrap.classList.contains('visible')) {
-          $.comboWrap.classList.remove('visible');
+        // комбо неактивно — полоса остаётся видимой, но пустой
+        if ($.comboWrap.classList.contains('active-glow') ||
+            $.comboWrap.classList.contains('fast')) {
           $.comboWrap.classList.remove('active-glow');
           $.comboWrap.classList.remove('fast');
           $.comboFill.style.transform = 'scaleX(0)';
           lastFastState = false;
         }
       }
+
+      prevComboActive = data.active;
     }
     rafId = requestAnimationFrame(comboTick);
   }

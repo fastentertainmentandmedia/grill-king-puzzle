@@ -63,7 +63,7 @@ export const gameConfig = {
     scoreLabel:    'Очки',
     maxComboLabel: 'Комбо',
     resetLabel:    '↺ Заново',
-    comboPrefix:   'КОМБО x',
+    comboPrefix:   'КОМБО',
     spawnFlash:    '✨',
     comboSuper: 'СУПЕР-КОМБО!',
 
@@ -110,4 +110,4 @@ export const gameConfig = {
   },
 };
 
-export const DEBUG_DISABLE_LIMIT = false;
+export const DEBUG_DISABLE_LIMIT = true;

@@ -24,7 +24,6 @@ const $ = createDOM({
   limitBestScore:    'limitBestScore',
   limitBestStreak:   'limitBestStreak',
   introLimitMinutes: 'introLimitMinutes',
-  hudLayer:          'hudLayer',
   hudTimer:          'hudTimer',
   resetBtn:          'resetBtn',
   scoreLabel:        'scoreLabel',

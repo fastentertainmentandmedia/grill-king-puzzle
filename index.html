@@ -73,24 +73,28 @@
   </div>
 
   <div class="game-wrapper" id="gameWrapper">
+
     <header class="header" id="header">
-      <div class="header-brand" id="headerBrand">
-        <img src="game/assets/logo.png" alt="Grill King Puzzle" class="header-logo">
-      </div>
-    </header>
+      <div class="hud-top" aria-hidden="true">
 
-    <div class="board-container" id="boardContainer">
-      <!-- Доска рендерится из JS -->
-    </div>
-
-    <div class="hud-layer" id="hudLayer" aria-hidden="true">
-      <div class="hud-top">
-        <div class="hud-left">
+        <div class="hud-col hud-col-left">
           <span class="hud-group hud-stat timer" id="timerBox">
             <span class="stat-value hud-timer" id="hudTimer">00:00</span>
           </span>
+          <div class="combo-wrap" id="comboWrap">
+            <div class="combo-glow"></div>
+            <div class="combo-bar-track">
+              <div class="combo-bar-fill" id="comboFill"></div>
+              <div class="combo-label" id="comboLabel">КОМБО</div>
+            </div>
+          </div>
         </div>
-        <div class="hud-right">
+
+        <div class="header-brand" id="headerBrand">
+          <img src="game/assets/logo.png" alt="Grill King Puzzle" class="header-logo">
+        </div>
+
+        <div class="hud-col hud-col-right">
           <span class="hud-group hud-stat score" id="scoreBox">
             <span class="stat-label" id="scoreLabel">Очки</span>
             <span class="stat-value" id="scoreValue">0</span>
@@ -100,15 +104,12 @@
             <span class="stat-value" id="maxComboValue">x0</span>
           </span>
         </div>
-      </div>
 
-      <div class="combo-wrap" id="comboWrap">
-        <div class="combo-glow"></div>
-        <div class="combo-bar-track">
-          <div class="combo-bar-fill" id="comboFill"></div>
-          <div class="combo-label" id="comboLabel">COMBO</div>
-        </div>
       </div>
+    </header>
+
+    <div class="board-container" id="boardContainer">
+      <!-- Доска рендерится из JS -->
     </div>
 
     <div id="startHint" class="touch-hint" role="status" aria-live="polite">
