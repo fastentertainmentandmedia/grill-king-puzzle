@@ -1,6 +1,8 @@
 // ============================================================
 // [FILE: core/js/ui-generic.js]
 // HUD по декларативным fields + combo-bar (собственный RAF).
+// maxComboValue показывает ТЕКУЩЕЕ комбо (comboCount),
+// hint-limit показывает рекорд стрика (limits.getBestStreak).
 // ============================================================
 
 import { state } from './state.js';
@@ -54,7 +56,7 @@ export function createUI({ $, limits, fields = [], timer = null, combo = null, h
   }
 
   // ----------------------------------------------------------
-  // Combo-bar
+  // Combo-bar + текущее комбо в HUD
   // ----------------------------------------------------------
   function setupCombo() {
     if (!combo || !$.comboWrap) return;
@@ -72,6 +74,11 @@ export function createUI({ $, limits, fields = [], timer = null, combo = null, h
   function comboTick() {
     const data = comboDataProvider();
     if (data) {
+      // текущее комбо в HUD
+      if ($.maxComboValue) {
+        $.maxComboValue.textContent = 'x' + (data.count || 0);
+      }
+
       if (data.active) {
         $.comboWrap.classList.add('visible');
         $.comboWrap.classList.add('active-glow');

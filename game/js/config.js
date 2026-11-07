@@ -34,8 +34,7 @@ export const gameConfig = {
   // add — сколько полок добавить при выполнении условия.
   // ----------------------------------------------------------
   SHELF_GROWTH: [
-    { score: 1000, combo: 8, add: 1, spawnPerStep: 8 },
-    // { score: 1500, combo: 5, add: 1, spawnPerStep: 5 },
+    { score: 0, combo: 5, add: 1, spawnPerStep: 4 },
   ],
   SHELF_MAX: 4,
 
@@ -45,7 +44,7 @@ export const gameConfig = {
   SPAWN_PER_STEP:     3,
   MIN_ITEMS_ON_FIELD: 6,
   SPAWN_DELAY_MS:     200,
-  MAX_ITEMS_ON_FIELD: -1, // -1 = без лимита
+  MAX_ITEMS_ON_FIELD: 43, // -1 = без лимита
 
   // ----------------------------------------------------------
   // Комбо
@@ -62,10 +61,12 @@ export const gameConfig = {
   // ----------------------------------------------------------
   TEXTS: {
     scoreLabel:    'Очки',
-    maxComboLabel: 'Макс. комбо',
+    maxComboLabel: 'Комбо',
     resetLabel:    '↺ Заново',
-    comboPrefix:   'COMBO x',
+    comboPrefix:   'КОМБО x',
     spawnFlash:    '✨',
+    comboSuper: 'СУПЕР-КОМБО!',
+
   },
 
   // ----------------------------------------------------------

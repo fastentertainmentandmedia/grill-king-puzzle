@@ -1,7 +1,7 @@
 // ============================================================
 // [FILE: core/js/rules.js]
-// Сжатие влево: slots[cell] — массив без null.
-// Динамика поля: SHELF_GROWTH (ИЛИ по score/combo) + spawnPerStep.
+// Динамическая полка по стрику: появляется при comboCount >= combo,
+// исчезает при breakCombo. Событие 'comboSuper' для анимации.
 // ============================================================
 
 import { gameConfig as cfg } from '../../game/js/config.js';
@@ -47,7 +47,8 @@ export function createRules() {
   let nowMs = 0;
   let events = [];
 
-  let firedGrowth = new Set();
+  // индекс активной "супер-полки" (из SHELF_GROWTH), -1 если нет
+  let activeGrowthIdx = -1;
 
   function countItemsOnField() {
     let n = 0;
@@ -124,6 +125,69 @@ export function createRules() {
     comboCount = 0;
     comboEndsAt = 0;
     currentComboDuration = cfg.COMBO_BASE_DURATION_MS;
+    removeSuperShelf();
+  }
+
+  // ----------------------------------------------------------
+  // Супер-полка по стрику
+  // ----------------------------------------------------------
+  function findGrowthRule() {
+    for (let i = 0; i < SHELF_GROWTH.length; i++) {
+      const rule = SHELF_GROWTH[i];
+      const needCombo = rule.combo || 0;
+      if (needCombo > 0) return { rule, index: i };
+    }
+    return null;
+  }
+
+  function addSuperShelf() {
+    if (activeGrowthIdx !== -1) return false;
+    const found = findGrowthRule();
+    if (!found) return false;
+    if (shelfCount >= SHELF_MAX) return false;
+
+    const { rule, index } = found;
+    const needCombo = rule.combo || 0;
+    if (comboCount < needCombo) return false;
+
+    const add = Math.max(1, rule.add || 1);
+    const newShelves = Math.min(SHELF_MAX, shelfCount + add);
+    const added = newShelves - shelfCount;
+    for (let s = 0; s < added; s++) {
+      for (let c = 0; c < CELLS_PER_SHELF; c++) slots.push([]);
+    }
+    shelfCount = newShelves;
+    totalSlots = shelfCount * CELLS_PER_SHELF;
+
+    if (typeof rule.spawnPerStep === 'number' && rule.spawnPerStep > 0) {
+      currentSpawnPerStep = rule.spawnPerStep;
+    }
+
+    activeGrowthIdx = index;
+    events.push({ type: 'comboSuper', shelfCount });
+    return true;
+  }
+
+  function removeSuperShelf() {
+    if (activeGrowthIdx === -1) return false;
+    const rule = SHELF_GROWTH[activeGrowthIdx];
+    if (!rule) { activeGrowthIdx = -1; return false; }
+
+    const add = Math.max(1, rule.add || 1);
+    const newShelves = Math.max(cfg.SHELF_COUNT, shelfCount - add);
+    const removed = shelfCount - newShelves;
+
+    // убираем полки с конца, сдвигая оставшиеся слоты
+    if (removed > 0) {
+      slots.splice(totalSlots - removed * CELLS_PER_SHELF, removed * CELLS_PER_SHELF);
+      shelfCount = newShelves;
+      totalSlots = shelfCount * CELLS_PER_SHELF;
+    }
+
+    currentSpawnPerStep = cfg.SPAWN_PER_STEP;
+    activeGrowthIdx = -1;
+    events.push({ type: 'comboLost', shelfCount });
+    return true;
   }
 
   function scheduleSpawn() {
@@ -163,6 +227,9 @@ export function createRules() {
       slots[ci] = [];
     }
 
+    // проверка на появление супер-полки после каждого мержа
+    addSuperShelf();
+
     scheduleSpawn();
     return true;
   }
@@ -179,45 +246,11 @@ export function createRules() {
     return true;
   }
 
-  function applyGrowth() {
-    if (SHELF_GROWTH.length === 0) return;
-    for (let i = 0; i < SHELF_GROWTH.length; i++) {
-      if (firedGrowth.has(i)) continue;
-      const rule = SHELF_GROWTH[i];
-      const needScore = rule.score || 0;
-      const needCombo = rule.combo || 0;
-
-      let triggered = false;
-      if (needScore > 0 && score >= needScore) triggered = true;
-      if (needCombo > 0 && maxCombo >= needCombo) triggered = true;
-      if (needScore === 0 && needCombo === 0) triggered = true;
-      if (!triggered) continue;
-
-      if (shelfCount >= SHELF_MAX) { firedGrowth.add(i); continue; }
-
-      const add = Math.max(1, rule.add || 1);
-      const newShelves = Math.min(SHELF_MAX, shelfCount + add);
-      const added = newShelves - shelfCount;
-      for (let s = 0; s < added; s++) {
-        for (let c = 0; c < CELLS_PER_SHELF; c++) slots.push([]);
-      }
-      shelfCount = newShelves;
-      totalSlots = shelfCount * CELLS_PER_SHELF;
-
-      if (typeof rule.spawnPerStep === 'number' && rule.spawnPerStep > 0) {
-        currentSpawnPerStep = rule.spawnPerStep;
-      }
-
-      firedGrowth.add(i);
-      events.push({ type: 'grow', shelfCount });
-    }
-  }
-
   function initSlots() {
     shelfCount = cfg.SHELF_COUNT;
     totalSlots = shelfCount * CELLS_PER_SHELF;
     currentSpawnPerStep = cfg.SPAWN_PER_STEP;
-    firedGrowth.clear();
+    activeGrowthIdx = -1;
     slots = new Array(totalSlots).fill(null).map(() => []);
     const capacity = totalSlots * PLACES_PER_CELL;
     const fillCount = Math.floor(capacity * 0.6);
@@ -276,12 +309,10 @@ export function createRules() {
     }
 
     clearMatches();
-    applyGrowth();
 
     if (spawnLocked && nowMs >= pendingSpawnAt) {
       processPendingSpawn();
       clearMatches();
-      applyGrowth();
     }
 
     return { event: null };
@@ -294,7 +325,6 @@ export function createRules() {
       if (!moved) return { event: null };
     }
     const had = clearMatches();
-    applyGrowth();
     return { event: had ? 'score' : 'move' };
   }
 
@@ -319,6 +349,7 @@ export function createRules() {
       COLS_PER_SHELF,
       CELLS_PER_SHELF,
       spawnPerStep: currentSpawnPerStep,
+      activeGrowthIdx,
     };
   }
 

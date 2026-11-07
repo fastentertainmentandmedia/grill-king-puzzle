@@ -297,6 +297,34 @@
   100% { transform: translate(-50%, -70%) scale(0.8); opacity: 0; }
 }
 
+.combo-super-banner {
+  position: fixed;
+  left: 50%;
+  top: 30%;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+  pointer-events: none;
+  font-size: clamp(24px, 7vw, 40px);
+  font-weight: 900;
+  letter-spacing: 2px;
+  color: #fff;
+  text-align: center;
+  white-space: nowrap;
+  text-shadow:
+    0 0 12px #ffcc33,
+    0 0 24px #ff7a00,
+    0 3px 0 #7a2c00,
+    0 4px 0 #4a1600;
+  animation: comboSuperAnim 1.4s ease-out forwards;
+}
+
+@keyframes comboSuperAnim {
+  0%   { transform: translate(-50%, 40%) scale(0.4); opacity: 0; }
+  20%  { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+  60%  { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+  100% { transform: translate(-50%, -90%) scale(0.85); opacity: 0; }
+}
+
 /* ============================================================
    [BLOCK: hud-layer — общая структура
    ============================================================ */

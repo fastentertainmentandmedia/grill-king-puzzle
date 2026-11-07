@@ -1,7 +1,8 @@
 // ============================================================
 // [FILE: core/js/render.js]
 // Скелет строится по state.SHELF_COUNT (динамически).
-// При росте поля — перестройка скелета.
+// При росте/сжатии поля — перестройка скелета.
+// События comboSuper / comboLost — анимация и перестройка.
 // ============================================================
 
 import { gameConfig as cfg } from '../../game/js/config.js';
@@ -167,7 +168,15 @@ export function createRenderer(container) {
 
   function applyEvents(events) {
     for (const ev of events) {
+      if (ev.type === 'comboSuper') {
+        playComboSuper();
+        continue;
+      }
+      if (ev.type === 'comboLost') {
+        continue;
+      }
       if (ev.type === 'grow') continue;
+
       const cellEl = container.querySelector(`.cell[data-index="${ev.cellIndex}"]`);
       if (!cellEl) continue;
 
@@ -182,6 +191,14 @@ export function createRenderer(container) {
         setTimeout(() => badge.remove(), 700);
       }
     }
+  }
+
+  function playComboSuper() {
+    const banner = document.createElement('div');
+    banner.className = 'combo-super-banner';
+    banner.textContent = cfg.TEXTS?.comboSuper || 'СУПЕР-КОМБО!';
+    container.appendChild(banner);
+    setTimeout(() => banner.remove(), 1400);
   }
 
   function playMergeBurst(cellEl, foodType) {

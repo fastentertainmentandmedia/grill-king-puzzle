@@ -103,6 +103,7 @@ function loadMetrika(id) {
 
 async function bootstrap() {
   window.__state = state;
+
   // 1. Аналитика
   const analyticsConfig = await loadAnalyticsConfig();
   setCounterId(analyticsConfig.yandexMetrikaId);
@@ -124,15 +125,15 @@ async function bootstrap() {
 
   // 3. Механика + рендер
   const rules = createRules();
+  window.__rules = rules;
   const renderer = createRenderer($.boardContainer);
 
-  // 4. UI
+  // 4. UI (maxComboValue обновляется из comboTick, field не нужен)
   const ui = createUI({
     $,
     limits,
     fields: [
-      { id: 'scoreValue',    key: 'score' },
-      { id: 'maxComboValue', key: 'maxCombo', format: v => 'x' + v },
+      { id: 'scoreValue', key: 'score' },
     ],
     timer: { limitMinutes: gameConfig.PLAY_LIMIT_MINUTES },
     combo: {
@@ -221,7 +222,6 @@ async function bootstrap() {
 
     if (snap.maxCombo !== prevMaxCombo) {
       prevMaxCombo = snap.maxCombo;
-      updateState({ maxCombo: snap.maxCombo }, ui);
       limits.updateBestStreak(snap.maxCombo);
       limits.saveCurrentProgress(snap.score, snap.maxCombo);
       if (state.comboActive) ui.showComboPopup('x' + snap.comboCount);
@@ -298,7 +298,6 @@ async function bootstrap() {
   function unlockGame() {
     if (state.gameUnlocked) return;
 
-    // Сброс памяти: при новом игроке (после localStorage.clear) state должен быть 0
     state.score = 0;
     state.maxCombo = 0;
 
