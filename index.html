@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#4a5568">
+  <title>GRILL KING PUZZLE</title>
+
+  <link rel="icon" type="image/png" sizes="16x16" href="game/assets/favicon/favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="game/assets/favicon/favicon-32x32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="game/assets/favicon/apple-touch-icon.png">
+
+  <style>
+    html { visibility: hidden; }
+    html.ready { visibility: visible; }
+
+    #preloader {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 20px;
+      background: #2b2b2f;
+      color: #ffffff;
+      font-family: system-ui, -apple-system, sans-serif;
+      font-size: 18px;
+      letter-spacing: 2px;
+      text-align: center;
+      visibility: visible;
+      overflow: hidden;
+    }
+    html.ready #preloader { display: none; }
+
+    .preloader-logo {
+      width: min(80vw, 420px);
+      height: auto;
+      display: block;
+    }
+    .preloader-burger {
+      width: min(40vw, 160px);
+      height: auto;
+      display: block;
+      animation: preloader-bounce 1s ease-in-out infinite;
+    }
+    .preloader-text {
+      opacity: .7;
+      margin-top: -4px;
+    }
+
+    @keyframes preloader-bounce {
+      0%, 100% { transform: translateY(0); }
+      50%      { transform: translateY(-12px); }
+    }
+  </style>
+
+  <link rel="stylesheet" href="core/css/base.css">
+  <link rel="stylesheet" href="core/css/layout.css">
+  <link rel="stylesheet" href="core/css/overlays.css">
+
+  <link rel="stylesheet" href="game/css/theme.css">
+</head>
+<body>
+
+  <div id="preloader">
+    <img class="preloader-logo" src="game/assets/logo.svg" alt="Grill King Puzzle">
+    <img class="preloader-burger" src="game/assets/preloader.svg" alt=""
+         onerror="this.style.display='none';">
+    <div class="preloader-text">Загрузка...</div>
+  </div>
+
+  <div class="game-wrapper" id="gameWrapper">
+    <header class="header" id="header">
+      <div class="header-brand" id="headerBrand">
+        <img src="game/assets/logo.svg" alt="Grill King Puzzle" class="header-logo">
+      </div>
+    </header>
+
+    <div class="board-container" id="boardContainer">
+      <!-- Доска рендерится из JS -->
+    </div>
+
+    <div class="hud-layer" id="hudLayer" aria-hidden="true">
+      <div class="hud-top">
+        <div class="hud-left">
+          <span class="hud-timer" id="hudTimer">00:00</span>
+          <button class="hud-reset" id="resetBtn" type="button">↺ Заново</button>
+        </div>
+        <div class="hud-right">
+          <span class="hud-group hud-stat score" id="scoreBox">
+            <span class="stat-label" id="scoreLabel">Очки</span>
+            <span class="stat-value" id="scoreValue">0</span>
+          </span>
+          <span class="hud-group hud-stat max-combo" id="maxComboBox">
+            <span class="stat-label" id="maxComboLabel">Макс. комбо</span>
+            <span class="stat-value" id="maxComboValue">x0</span>
+          </span>
+        </div>
+      </div>
+
+      <div class="combo-wrap" id="comboWrap">
+        <div class="combo-glow"></div>
+        <div class="combo-bar-track">
+          <div class="combo-bar-fill" id="comboFill"></div>
+          <div class="combo-label" id="comboLabel">COMBO</div>
+        </div>
+      </div>
+    </div>
+
+      <div id="startHint" class="touch-hint" role="status" aria-live="polite">
+        <div class="hint-limit">
+          <div class="hint-limit-title">Время вышло</div>
+          <div class="hint-limit-record">
+            Ваш рекорд счёта: <span id="limitBestScore">0</span>
+          </div>
+          <div class="hint-limit-streak">
+            Ваша лучшая серия: <span id="limitBestStreak">x0</span>
+          </div>
+          <div class="hint-limit-body">
+            <p>Надеемся, что смогли вас развлечь</p>
+            <p>Ждём вас снова!</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="intro-modal hidden" id="introModal" role="dialog" aria-modal="true" aria-labelledby="introTitle">
+    <div class="intro-content">
+      <div class="header-brand">
+        <img src="game/assets/logo.svg" alt="Grill King Puzzle" class="header-logo"
+             onerror="this.style.display='none'; this.parentNode.textContent='GRILL KING PUZZLE';">
+      </div>
+
+      <div class="intro-rules">
+        <ul>
+          <li>Перетаскивай еду между ячейками гриля.</li>
+          <li>Собери 3 одинаковых продукта в одной ячейке — они сгорят и принесут очки.</li>
+          <li>Успевай за комбо-полоской: серия мержей ускоряет игру и даёт больше очков.</li>
+          <li>Набери как можно больше очков за <span id="introLimitMinutes">10</span> мин.</li>
+          <li>Играй сам или соревнуйся с друзьями!</li>
+        </ul>
+      </div>
+
+      <div class="intro-cookie">
+        Мы используем файлы cookie. <br>Продолжая, вы соглашаетесь с <a href="/privacy.html">политикой конфиденциальности</a>
+      </div>
+
+      <button class="intro-accept" id="introAccept" type="button">Хорошо</button>
+    </div>
+  </div>
+
+  <script type="module" src="core/js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,515 @@
+/* ============================================================
+   [FILE: core/css/layout.css]
+   Структура: wrapper / header / board / hud / shelf / cell / slot.
+   Цвета и текстуры — в game/css/theme.css.
+   ============================================================ */
+
+.game-wrapper {
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  padding-top:    max(var(--wrapper-pad), env(safe-area-inset-top));
+  padding-right:  max(var(--wrapper-pad), env(safe-area-inset-right));
+  padding-bottom: max(var(--wrapper-pad), env(safe-area-inset-bottom));
+  padding-left:   max(var(--wrapper-pad), env(safe-area-inset-left));
+
+  gap: var(--gap-sm);
+
+  overflow: hidden;
+  touch-action: manipulation;
+}
+
+.header {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: var(--header-h);
+  padding: 0 var(--safe-pad);
+  overflow: hidden;
+}
+
+.header-brand {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  overflow: hidden;
+}
+
+.header-logo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+}
+
+/* ============================================================
+   [BLOCK: board — контейнер доски (полки/ячейки рендерит JS)
+   ============================================================ */
+
+.board-container {
+  flex: 1 1 auto;
+  min-height: 0;
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  touch-action: manipulation;
+}
+
+.board {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-md);
+  width: 100%;
+  max-width: 440px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.shelf {
+  display: grid;
+  gap: var(--gap-xs);
+  width: 100%;
+  position: relative;
+  padding: var(--pad-panel-y);
+  isolation: isolate;
+}
+
+.cell {
+  position: relative;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  padding: 2px;
+  aspect-ratio: 1.75 / 1;
+  isolation: isolate;
+}
+
+.cell-items {
+  position: relative;
+  z-index: 4;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  align-items: center;
+  justify-items: center;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.slot-place {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* ============================================================
+   [BLOCK: item — еда
+   ============================================================ */
+
+.item {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: clamp(1.6rem, 8.5vw, 2.6rem);
+  line-height: 1;
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  filter: drop-shadow(0 3px 3px rgba(0,0,0,0.8));
+  cursor: grab;
+  pointer-events: auto;
+  -webkit-user-drag: element;
+  user-select: auto;
+  -webkit-user-select: auto;
+  will-change: transform;
+  overflow: visible;
+  touch-action: none;
+}
+
+.item:active {
+  cursor: grabbing;
+}
+
+.item img,
+.item canvas {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+  -webkit-user-drag: none;
+  user-drag: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* ============================================================
+   [BLOCK: merge-эффекты (структура; цвета — в theme.css)
+   ============================================================ */
+
+.merge-burst {
+  position: absolute;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.merge-emoji {
+  position: absolute;
+  font-size: clamp(1.6rem, 8.5vw, 2.6rem);
+  line-height: 1;
+  transform-origin: center;
+  animation: mergePull 0.45s cubic-bezier(0.2, 0.9, 0.3, 1.2) forwards;
+}
+
+@keyframes mergePull {
+  0%   { transform: translate(var(--sx), var(--sy)) scale(1) rotate(0deg); opacity: 1; }
+  55%  { transform: translate(0, 0) scale(1.25) rotate(15deg); opacity: 1; }
+  75%  { transform: translate(0, 0) scale(1.45) rotate(-12deg); opacity: 1; }
+  100% { transform: translate(0, 0) scale(1.6) rotate(0deg); opacity: 0; }
+}
+
+.merge-flash {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 8px;
+  height: 8px;
+  margin-left: -4px;
+  margin-top: -4px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9998;
+  animation: flashExpand 0.5s ease-out forwards;
+  filter: blur(1px);
+}
+
+@keyframes flashExpand {
+  0%   { width: 8px;   height: 8px;   margin-left: -4px;   margin-top: -4px;   opacity: 1; }
+  60%  { opacity: 1; }
+  100% { width: 180px; height: 180px; margin-left: -90px; margin-top: -90px; opacity: 0; }
+}
+
+.merge-ring {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 16px;
+  height: 16px;
+  margin-left: -8px;
+  margin-top: -8px;
+  border-radius: 50%;
+  border: 3px solid;
+  pointer-events: none;
+  z-index: 9997;
+  opacity: 0.9;
+  animation: ringExpand 0.6s cubic-bezier(0.2, 0.8, 0.4, 1) forwards;
+}
+
+@keyframes ringExpand {
+  0%   { width: 16px;   height: 16px;   margin-left: -8px;   margin-top: -8px;   opacity: 0.95; border-width: 3px; }
+  100% { width: 200px;  height: 200px;  margin-left: -100px; margin-top: -100px; opacity: 0;    border-width: 1px; }
+}
+
+.spark {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 6px;
+  height: 6px;
+  margin-left: -3px;
+  margin-top: -3px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  animation: sparkFly 0.55s ease-out forwards;
+}
+
+@keyframes sparkFly {
+  0%   { transform: translate(0, 0) scale(1); opacity: 1; }
+  100% { transform: translate(var(--dx), var(--dy)) scale(0.2); opacity: 0; }
+}
+
+.item.match-pop { animation: popOut 0.3s ease forwards; }
+
+@keyframes popOut {
+  0%   { transform: scale(1); opacity: 1; }
+  45%  { transform: scale(1.5); opacity: 1; }
+  100% { transform: scale(0); opacity: 0; }
+}
+
+.item.appear { animation: appearIn 0.24s cubic-bezier(0.2, 1.4, 0.4, 1); }
+
+@keyframes appearIn {
+  0%   { transform: scale(0.3); opacity: 0; }
+  70%  { transform: scale(1.15); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.item.spawn-new { animation: spawnIn 0.35s cubic-bezier(0.2, 1.6, 0.4, 1); }
+
+@keyframes spawnIn {
+  0%   { transform: scale(0) rotate(-30deg); opacity: 0; }
+  60%  { transform: scale(1.25) rotate(6deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0); opacity: 1; }
+}
+
+.spawn-badge {
+  position: absolute;
+  left: 50%;
+  top: 30%;
+  transform: translate(-50%, -50%);
+  z-index: 9998;
+  pointer-events: none;
+  font-size: 1.4rem;
+  font-weight: 900;
+  animation: badgePop 0.6s ease-out forwards;
+}
+
+@keyframes badgePop {
+  0%   { transform: translate(-50%, 0) scale(0.5); opacity: 0; }
+  30%  { transform: translate(-50%, -20%) scale(1.1); opacity: 1; }
+  70%  { transform: translate(-50%, -40%) scale(1); opacity: 1; }
+  100% { transform: translate(-50%, -70%) scale(0.8); opacity: 0; }
+}
+
+/* ============================================================
+   [BLOCK: hud-layer — общая структура
+   ============================================================ */
+
+.hud-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-select: none;
+  z-index: 1;
+  font-size: var(--hud-font-size, 16px);
+  line-height: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+}
+
+.hud-top {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap-xs);
+  padding: var(--pad-panel-y) var(--pad-panel-x);
+  min-width: 0;
+}
+
+.hud-left {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-xs);
+  flex-shrink: 0;
+}
+
+.hud-right {
+  display: flex;
+  align-items: stretch;
+  gap: var(--gap-xs);
+  flex: 1;
+  justify-content: flex-end;
+  min-width: 0;
+}
+
+.hud-group {
+  display: inline-flex;
+}
+
+.hud-timer {
+  font-size: 1.05em;
+  font-weight: 900;
+  padding: 4px 6px;
+}
+
+.hud-reset {
+  pointer-events: auto;
+  border-radius: var(--radius-md);
+  padding: 5px 10px;
+  font-weight: 800;
+  font-size: 0.85em;
+  cursor: pointer;
+  touch-action: manipulation;
+  flex-shrink: 0;
+  transition: transform var(--t-fast), box-shadow var(--t-fast);
+}
+
+.hud-reset:active { transform: translateY(3px); }
+
+.hud-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  border-radius: var(--radius-md);
+  padding: 3px 10px 4px;
+  line-height: 1.1;
+  min-width: 0;
+  position: relative;
+  pointer-events: none;
+}
+
+.hud-stat .stat-label {
+  font-size: 0.6em;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  opacity: 0.9;
+  white-space: nowrap;
+}
+
+.hud-stat .stat-value {
+  font-weight: 900;
+  font-size: 1.05em;
+  line-height: 1.05;
+}
+
+.hud-stat.new-record {
+  animation: newRecordPulse 0.7s ease-out;
+}
+
+@keyframes newRecordPulse {
+  0%   { outline: 0 solid rgba(255, 220, 120, 0.9); }
+  50%  { outline: 12px solid rgba(255, 220, 120, 0); }
+  100% { outline: 0 solid rgba(255, 220, 120, 0); }
+}
+
+/* ============================================================
+   [BLOCK: combo-wrap (структура; цвета — в theme.css)
+   ============================================================ */
+
+.combo-wrap {
+  position: relative;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  margin: 0 var(--pad-panel-x);
+}
+
+.combo-wrap.visible { opacity: 1; }
+
+.combo-bar-track {
+  width: 100%;
+  height: 14px;
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+}
+
+.combo-bar-fill {
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 100%;
+  border-radius: 8px;
+  transform-origin: left center;
+  transform: scaleX(1);
+  transition: none;
+}
+
+.combo-wrap.visible .combo-bar-fill {
+  animation: comboPulse 0.7s ease-in-out infinite alternate;
+}
+
+.combo-wrap.fast .combo-bar-fill {
+  animation: comboPulse 0.35s ease-in-out infinite alternate;
+}
+
+@keyframes comboPulse {
+  0%   { filter: brightness(1); }
+  100% { filter: brightness(1.35); }
+}
+
+.combo-label {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 3;
+  font-weight: 900;
+  font-size: 0.68em;
+  letter-spacing: 1px;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.combo-pop {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+  pointer-events: none;
+  font-weight: 900;
+  font-size: 1.5em;
+  white-space: nowrap;
+  animation: comboPopAnim 0.9s cubic-bezier(0.2, 1.4, 0.4, 1) forwards;
+}
+
+@keyframes comboPopAnim {
+  0%   { transform: translate(-50%, 0) scale(0.3); opacity: 0; }
+  25%  { transform: translate(-50%, -40%) scale(1.25); opacity: 1; }
+  60%  { transform: translate(-50%, -70%) scale(1); opacity: 1; }
+  100% { transform: translate(-50%, -140%) scale(0.85); opacity: 0; }
+}
+
+.combo-glow {
+  position: absolute;
+  inset: -8px;
+  border-radius: 16px;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 1;
+  transition: opacity 0.25s ease;
+}
+
+.combo-wrap.active-glow .combo-glow { opacity: 1; }
+
+/* ============================================================
+   [BLOCK: адаптив
+   ============================================================ */
+
+@media (max-width: 380px) {
+  .hud-stat { padding: 2px 9px 3px; }
+  .hud-stat .stat-label { font-size: 0.55em; }
+  .hud-stat .stat-value { font-size: 0.95em; }
+  .hud-reset { font-size: 0.78em; padding: 4px 9px; }
+  .combo-bar-track { height: 12px; }
+  .combo-label { font-size: 0.6em; }
+  .board { gap: var(--gap-xs); }
+  .shelf { padding: 4px; }
+  .cell { border-radius: 4px; }
+  .item { font-size: clamp(1.4rem, 7.5vw, 2.2rem); }
+  .merge-emoji { font-size: clamp(1.4rem, 7.5vw, 2.2rem); }
+}

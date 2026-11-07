@@ -1,0 +1,529 @@
+/* ============================================================
+   [FILE: game/css/theme.css]
+   Тема: GRILL KING PUZZLE — "Charcoal Grill".
+   Задаёт палитру, текстуры, шрифты, оформление HUD/модалок.
+   Структура — в core/css/*. Здесь только визуал.
+   ============================================================ */
+
+:root {
+  /* --- структурные переопределения --- */
+  --header-h:    56px;
+  --gap-sm:      8px;
+  --field-aspect: 1.4;
+
+  /* --- фон страницы / поля --- */
+  --color-page-bg:       #2b2b2f;
+  --color-field-bg-top:  #4a5568;
+  --color-field-bg-bot:  #2f3640;
+
+  /* --- ячейка / решётка --- */
+  --color-cell-bg:       #1a1410;
+  --color-cell-glow:     rgba(255, 110, 0, 0.35);
+  --color-grill-bar:     #a89480;
+  --color-grill-bar-dark:#4d3e32;
+  --color-grill-shadow:  #151210;
+  --color-shelf-bg:      #2a2320;
+  --color-shelf-border:  #5a4d43;
+
+  /* --- еда --- */
+  --color-item-shadow:   rgba(0, 0, 0, 0.85);
+
+  /* --- комбо --- */
+  --color-combo-track:   #2a1b14;
+  --color-combo-track-b: #6b4a33;
+  --color-combo-fill:    #ff7a00;
+  --color-combo-fast:    #ff1f00;
+  --color-combo-label:   #ffffff;
+
+  /* --- HUD --- */
+  --color-text-main:     #ffffff;
+  --color-text-dim:      #ffdca8;
+  --color-text-accent:   #fff2c4;
+  --color-score-bg:      #b85f4e;
+  --color-score-bg-dark: #8c4436;
+  --color-score-shadow:  #5c291e;
+  --color-combo-bg:      #6b3fa0;
+  --color-combo-bg-dark: #4a2a75;
+  --color-combo-shadow:  #2f1a4a;
+  --color-reset-bg:      #5ca3d9;
+  --color-reset-bg-dark: #3b719c;
+
+  --color-spawn-badge:   #ffefc2;
+  --color-accent:        #ff7a00;
+
+  /* --- таймер (лимит) --- */
+  --color-timer-normal:  #9ccc7a;
+  --color-timer-warning: #d8bc6a;
+  --color-timer-danger:  #d86a5a;
+
+  /* --- модалки / подсказки --- */
+  --color-panel-bg:      #2a2320;
+  --color-panel-border:  #5a4d43;
+  --color-hint-bg:       rgba(31, 24, 20, 0.96);
+  --color-intro-bg:      #2a2320;
+  --color-warning:       #d8bc6a;
+
+  /* --- радиусы / шрифты --- */
+  --radius-sm:   6px;
+  --radius-md:   12px;
+  --radius-lg:   20px;
+  --radius-pill: 40px;
+
+  --font-ui:   'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-mono: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+  /* --- прочее --- */
+  --hud-top-h:   0.10;
+  --hud-padding: 0.03;
+}
+
+body {
+  background-color: var(--color-page-bg);
+  font-family: var(--font-ui);
+  color: var(--color-text-main);
+}
+
+:focus-visible { outline-color: var(--color-panel-border); }
+
+a, a:link, a:visited,
+a:hover, a:active, a:focus {
+  color: #ffffff;
+}
+
+/* ============================================================
+   [BLOCK: header / logo]
+   ============================================================ */
+
+.header-brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.header-logo {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+/* ============================================================
+   [BLOCK: board / shelf / cell]
+   Структурные размеры — в core/css/layout.css.
+   Здесь только текстуры/цвета.
+   ============================================================ */
+
+.board {
+  background: transparent;
+}
+
+.shelf {
+  background: var(--color-shelf-bg);
+  border: 2px solid var(--color-shelf-border);
+  border-radius: var(--radius-md);
+  box-shadow:
+    0 6px 0 var(--color-grill-shadow),
+    0 10px 15px rgba(0, 0, 0, 0.6),
+    inset 0 0 0 3px #3d332d,
+    inset 0 0 20px #000000;
+}
+
+.cell {
+  background: var(--color-cell-bg);
+  box-shadow:
+    inset 0 8px 15px rgba(0, 0, 0, 0.9),
+    inset 0 0 0 2px #0d0b09,
+    0 0 10px var(--color-cell-glow);
+}
+
+.cell.drag-over {
+  box-shadow:
+    inset 0 8px 15px rgba(0, 0, 0, 0.9),
+    inset 0 0 0 3px #ffb86b,
+    0 0 14px rgba(255, 180, 60, 0.9);
+  filter: brightness(1.2);
+}
+
+.cell::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    radial-gradient(ellipse at 25% 45%, #ff7b1a 0%, #ea3e00 18%, #a52100 45%, #3c0f00 78%, #1a0800 100%),
+    radial-gradient(ellipse at 75% 60%, #ffb347 0%, #d94a00 28%, #7a2200 62%, #2e0a00 100%),
+    radial-gradient(ellipse at 50% 25%, #ffdd99 0%, #ff6600 20%, #b32d00 58%, #2a0500 100%);
+  background-blend-mode: overlay, screen, normal;
+  filter: brightness(1.2) blur(0.5px);
+  opacity: 0.9;
+  animation: emberGlow 2.6s infinite alternate ease-in-out;
+}
+
+.cell::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  background: radial-gradient(ellipse at 40% 40%, rgba(255, 220, 120, 0.22) 0%, transparent 65%);
+  mix-blend-mode: overlay;
+  opacity: 0.6;
+}
+
+.cell:nth-child(odd)::before { animation-duration: 2.2s; animation-delay: -0.5s; }
+.cell:nth-child(3n)::before  { animation-duration: 3.1s; animation-delay: -1s; }
+
+@keyframes emberGlow {
+  0%   { opacity: 0.75; filter: brightness(1.1) blur(0.5px); }
+  30%  { opacity: 0.95; filter: brightness(1.35) blur(1px); }
+  60%  { opacity: 0.85; filter: brightness(1.2) blur(0.8px); }
+  100% { opacity: 0.98; filter: brightness(1.4) blur(1.2px); }
+}
+
+/* решётка */
+.grill-bars {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background-image:
+    repeating-linear-gradient(0deg,
+      transparent 0px, transparent 9px,
+      var(--color-grill-bar-dark) 9px, var(--color-grill-bar) 11px,
+      #4d3e32 13px, transparent 13px, transparent 22px),
+    repeating-linear-gradient(90deg,
+      transparent 0px, transparent 26px,
+      #5e4d3e 26px, #b09b85 28px, #463a2f 30px,
+      transparent 30px, transparent 56px);
+  box-shadow:
+    inset 0 0 0 1px #221e19,
+    inset 0 0 15px #00000088;
+  filter: drop-shadow(0 0 3px #00000099);
+  opacity: 0.95;
+}
+
+.grill-bars::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg,
+    rgba(255, 255, 255, 0.10) 0%,
+    transparent 40%, transparent 70%,
+    rgba(255, 255, 255, 0.06) 100%);
+  mix-blend-mode: overlay;
+  pointer-events: none;
+}
+
+/* ============================================================
+   [BLOCK: item / анимации мержа]
+   ============================================================ */
+
+.item {
+  filter: drop-shadow(0 3px 3px var(--color-item-shadow));
+}
+
+.item:active { cursor: grabbing; }
+
+.merge-emoji {
+  filter: drop-shadow(0 0 10px #fff2c4) drop-shadow(0 0 18px #ffb020);
+}
+
+.merge-flash {
+  background: radial-gradient(circle,
+    #fff9e0 0%, #ffd270 30%, #ff8a00 55%, rgba(255, 90, 0, 0) 75%);
+}
+
+.merge-ring {
+  border-color: #ffcf7a;
+  box-shadow: 0 0 12px #ffb020, inset 0 0 8px #ffdd99;
+}
+
+.spark {
+  background: radial-gradient(circle,
+    #fff5c4 0%, #ffab33 60%, rgba(255, 120, 0, 0) 100%);
+  filter: drop-shadow(0 0 4px #ffcc66);
+}
+
+.spawn-badge {
+  color: var(--color-spawn-badge);
+  text-shadow: 0 0 10px #ff9b00, 0 0 20px #ff6400;
+}
+
+.item.match-pop {
+  /* анимация — в core/css/layout.css, здесь только фильтр */
+  filter: brightness(2.4) drop-shadow(0 0 12px #ffb86b);
+}
+
+/* ============================================================
+   [BLOCK: hud]
+   ============================================================ */
+
+.hud-layer {
+  font-family: var(--font-ui);
+  color: var(--color-text-main);
+}
+
+.hud-reset {
+  background: var(--color-reset-bg);
+  border: 2px solid var(--color-reset-bg-dark);
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.3),
+    0 4px 0 var(--color-reset-bg-dark);
+  color: #fff;
+}
+
+.hud-reset:active {
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.3),
+    0 1px 0 var(--color-reset-bg-dark);
+}
+
+.hud-stat.score {
+  background: var(--color-score-bg);
+  border: 2px solid var(--color-score-bg-dark);
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.2),
+    0 4px 0 var(--color-score-shadow);
+  color: #fff;
+  text-shadow: 0 1px 0 var(--color-score-shadow);
+}
+
+.hud-stat.max-combo {
+  background: var(--color-combo-bg);
+  border: 2px solid var(--color-combo-bg-dark);
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.25),
+    0 4px 0 var(--color-combo-shadow);
+  color: var(--color-text-accent);
+  text-shadow: 0 1px 0 var(--color-combo-shadow);
+}
+
+.hud-stat .stat-label {
+  color: var(--color-text-dim);
+}
+
+.hud-stat .stat-value {
+  color: var(--color-text-accent);
+}
+
+/* таймер (лимит) */
+.hud-timer {
+  font-family: var(--font-mono);
+  font-weight: 900;
+  color: var(--color-timer-normal);
+  text-shadow: 0 0 8px rgba(156, 204, 122, 0.18);
+  transition: color .2s, font-size .2s, opacity .2s;
+}
+.hud-timer.is-warning  {
+  color: var(--color-timer-warning);
+  text-shadow: 0 0 8px rgba(216, 188, 106, 0.22);
+}
+.hud-timer.is-danger,
+.hud-timer.is-critical {
+  color: var(--color-timer-danger);
+  text-shadow: 0 0 12px rgba(216, 106, 90, 0.42);
+}
+.hud-timer.is-critical { animation: hud-timer-pulse 1s ease-in-out infinite; }
+
+@keyframes hud-timer-pulse {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: .6; }
+}
+
+/* ============================================================
+   [BLOCK: combo-bar]
+   ============================================================ */
+
+.combo-bar-track {
+  background: var(--color-combo-track);
+  border: 2px solid var(--color-combo-track-b);
+  box-shadow:
+    inset 0 2px 4px rgba(0, 0, 0, 0.7),
+    0 2px 0 #1c100a;
+}
+
+.combo-bar-fill {
+  background: linear-gradient(90deg,
+    #ffb020 0%, #ff7a00 45%, #ff3d00 100%);
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.5),
+    0 0 10px rgba(255, 140, 0, 0.7);
+}
+
+.combo-wrap.fast .combo-bar-fill {
+  background: linear-gradient(90deg,
+    #ff5a00 0%, #ff1f00 45%, #b80000 100%);
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.6),
+    0 0 14px rgba(255, 60, 0, 0.9);
+}
+
+.combo-label {
+  color: var(--color-combo-label);
+  text-shadow: 0 1px 2px #000, 0 0 6px #ff8a00;
+}
+
+.combo-pop {
+  color: #fff;
+  text-shadow:
+    0 0 8px #ffcc33,
+    0 0 16px #ff7a00,
+    0 2px 0 #7a2c00,
+    0 3px 0 #4a1600;
+}
+
+.combo-glow {
+  background: radial-gradient(ellipse at center,
+    rgba(255, 170, 40, 0.55), transparent 70%);
+}
+
+/* ============================================================
+   [BLOCK: touch-hint]
+   ============================================================ */
+
+.touch-hint {
+  background-color: var(--color-hint-bg);
+  color: var(--color-text-main);
+  border: 2px solid var(--color-panel-border);
+  border-radius: var(--radius-md);
+  font-family: var(--font-ui);
+  font-size: clamp(18px, 5vw, 28px);
+  font-weight: 900;
+  line-height: 1.6;
+  letter-spacing: 2px;
+  text-align: center;
+  box-shadow:
+    0 0 40px rgba(0, 0, 0, 0.65),
+    inset 0 0 40px rgba(220, 230, 240, 0.03);
+}
+
+.touch-hint small {
+  font-size: .75em;
+  letter-spacing: 3px;
+  color: var(--color-text-dim);
+  text-shadow: none;
+}
+
+body[data-hint="limit"] .touch-hint {
+  background-color: rgba(20, 18, 16, 0.97);
+  border: 1px solid var(--color-warning);
+  border-radius: var(--radius-lg);
+  box-shadow:
+    0 0 40px rgba(216, 188, 106, 0.12),
+    0 0 80px rgba(0, 0, 0, 0.65),
+    inset 0 0 40px rgba(220, 230, 240, 0.03);
+}
+
+body[data-hint="limit"] .hint-limit-title {
+  font-size: clamp(20px, 5vw, 28px);
+  font-weight: 900;
+  color: var(--color-text-accent);
+  margin-bottom: 4px;
+}
+
+body[data-hint="limit"] .hint-limit-record,
+body[data-hint="limit"] .hint-limit-streak {
+  font-size: clamp(18px, 3.4vw, 20px);
+  color: var(--color-text-main);
+  letter-spacing: 0.5px;
+}
+
+body[data-hint="limit"] #limitBestScore {
+  font-size: 1.3em;
+  font-weight: 900;
+  margin-left: 4px;
+}
+
+body[data-hint="limit"] #limitBestStreak {
+  font-size: 1.4em;
+  font-weight: 900;
+  color: var(--color-timer-warning);
+  margin-left: 4px;
+}
+
+body[data-hint="limit"] .hint-limit-body {
+  font-size: clamp(18px, 3.4vw, 20px);
+  color: var(--color-text-main);
+  text-align: center;
+}
+
+/* ============================================================
+   [BLOCK: intro]
+   ============================================================ */
+
+.intro-modal {
+  background-color: rgba(0, 0, 0, 0.85);
+}
+
+.intro-content {
+  background-color: var(--color-intro-bg);
+  border: 3px solid var(--color-panel-border);
+  border-radius: var(--radius-lg);
+  box-shadow:
+    0 0 40px rgba(0, 0, 0, 0.75),
+    inset 0 0 60px rgba(0, 0, 0, 0.4);
+  color: var(--color-text-main);
+}
+
+.intro-title {
+  font-size: clamp(20px, 5vw, 28px);
+  font-weight: 900;
+  letter-spacing: 2px;
+  color: var(--color-text-accent);
+}
+
+.intro-rules {
+  font-size: clamp(13px, 3.4vw, 15px);
+  color: var(--color-text-main);
+}
+
+.intro-rules li::before {
+  color: var(--color-text-dim);
+  font-size: .9em;
+}
+
+.intro-cookie {
+  font-size: clamp(12px, 2.8vw, 14px);
+  color: #f2f2ef;
+}
+
+.intro-accept {
+  font-family: var(--font-ui);
+  font-size: clamp(14px, 3.6vw, 17px);
+  font-weight: 900;
+  letter-spacing: 2px;
+  color: #f2f2ef;
+  text-transform: uppercase;
+  border: 2px solid #e6e6e3;
+  border-radius: var(--radius-pill);
+  background-color: rgba(230, 230, 227, 0.06);
+  box-shadow:
+    0 0 16px rgba(230, 230, 227, 0.10),
+    inset 0 0 16px rgba(230, 230, 227, 0.04);
+}
+
+.intro-accept:active {
+  background-color: rgba(230, 230, 227, 0.14);
+  box-shadow:
+    0 0 24px rgba(230, 230, 227, 0.20),
+    inset 0 0 20px rgba(230, 230, 227, 0.08);
+}
+
+/* ============================================================
+   [BLOCK: preloader]
+   ============================================================ */
+
+#preloader {
+  background: #2b2b2f;
+  color: #ffffff;
+  font-family: var(--font-ui);
+}
+
+.preloader-text {
+  opacity: .7;
+}
+
+@keyframes preloader-bounce {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-12px); }
+}
