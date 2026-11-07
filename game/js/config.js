@@ -13,8 +13,7 @@ export const gameConfig = {
 
   ASSETS: {
     goatcounter: 'game/assets/goatcounter/count.js',
-    logo:        'game/assets/logo.svg',
-    preloader:   'game/assets/preloader.svg', // опционально, fallback — logo
+    logo:        'game/assets/logo.png',
   },
 
   // ----------------------------------------------------------
@@ -110,4 +109,4 @@ export const gameConfig = {
   },
 };
 
-export const DEBUG_DISABLE_LIMIT = true;
+export const DEBUG_DISABLE_LIMIT = false;

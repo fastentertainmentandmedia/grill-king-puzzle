@@ -1,22 +1,16 @@
 /* ============================================================
    [FILE: game/css/theme.css]
-   Тема: GRILL KING PUZZLE — "Charcoal Grill".
-   Задаёт палитру, текстуры, шрифты, оформление HUD/модалок.
-   Структура — в core/css/*. Здесь только визуал.
    ============================================================ */
 
 :root {
-  /* --- структурные переопределения --- */
   --header-h:    100px;
   --gap-sm:      8px;
   --field-aspect: 1.4;
 
-  /* --- фон страницы / поля --- */
   --color-page-bg:       #2b2b2f;
   --color-field-bg-top:  #4a5568;
   --color-field-bg-bot:  #2f3640;
 
-  /* --- ячейка / решётка --- */
   --color-cell-bg:       #1a1410;
   --color-cell-glow:     rgba(255, 110, 0, 0.35);
   --color-grill-bar:     #a89480;
@@ -25,17 +19,14 @@
   --color-shelf-bg:      #2a2320;
   --color-shelf-border:  #5a4d43;
 
-  /* --- еда --- */
   --color-item-shadow:   rgba(0, 0, 0, 0.85);
 
-  /* --- комбо --- */
   --color-combo-track:   #2a1b14;
   --color-combo-track-b: #6b4a33;
   --color-combo-fill:    #ff7a00;
   --color-combo-fast:    #ff1f00;
   --color-combo-label:   #ffffff;
 
-  /* --- HUD --- */
   --color-text-main:     #ffffff;
   --color-text-dim:      #ffdca8;
   --color-text-accent:   #fff2c4;
@@ -51,19 +42,16 @@
   --color-spawn-badge:   #ffefc2;
   --color-accent:        #ff7a00;
 
-  /* --- таймер (лимит) --- */
   --color-timer-normal:  #9ccc7a;
   --color-timer-warning: #d8bc6a;
   --color-timer-danger:  #d86a5a;
 
-  /* --- модалки / подсказки --- */
   --color-panel-bg:      #2a2320;
   --color-panel-border:  #5a4d43;
   --color-hint-bg:       rgba(31, 24, 20, 0.96);
   --color-intro-bg:      #2a2320;
   --color-warning:       #d8bc6a;
 
-  /* --- радиусы / шрифты --- */
   --radius-sm:   6px;
   --radius-md:   12px;
   --radius-lg:   20px;
@@ -72,7 +60,6 @@
   --font-ui:   'Segoe UI', system-ui, -apple-system, sans-serif;
   --font-mono: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 
-  /* --- прочее --- */
   --hud-top-h:   0.10;
   --hud-padding: 0.03;
 }
@@ -109,8 +96,6 @@ a:hover, a:active, a:focus {
 
 /* ============================================================
    [BLOCK: board / shelf / cell]
-   Структурные размеры — в core/css/layout.css.
-   Здесь только текстуры/цвета.
    ============================================================ */
 
 .board {
@@ -180,7 +165,6 @@ a:hover, a:active, a:focus {
   100% { opacity: 0.98; filter: brightness(1.4) blur(1.2px); }
 }
 
-/* решётка */
 .grill-bars {
   position: absolute;
   inset: 0;
@@ -250,10 +234,8 @@ a:hover, a:active, a:focus {
 }
 
 .item.match-pop {
-  /* анимация — в core/css/layout.css, здесь только фильтр */
   filter: brightness(2.4) drop-shadow(0 0 12px #ffb86b);
 }
-
 
 /* ============================================================
    [BLOCK: hud]
@@ -307,8 +289,6 @@ a:hover, a:active, a:focus {
   color: var(--color-text-accent);
 }
 
-/* таймер (лимит) */
-
 .hud-stat.timer {
   background: #4a6a8a;
   border: 2px solid #34506a;
@@ -361,25 +341,21 @@ a:hover, a:active, a:focus {
 /* ============================================================
    [BLOCK: combo-bar]
    ============================================================ */
+
 .combo-wrap {
   background: var(--color-combo-track);
-  border: none;
+  border: 2px solid var(--color-combo-track-b);
   border-radius: var(--radius-md);
-  padding: 0;
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
+  padding: 3px 6px 4px;
+  box-shadow:
+    inset 0 2px 4px rgba(0, 0, 0, 0.7),
+    0 2px 0 #1c100a;
 }
 
 .combo-bar-track {
   background: transparent;
   border: none;
   box-shadow: none;
-}
-.combo-bar-track {
-  background: var(--color-combo-track);
-  border: 2px solid var(--color-combo-track-b);
-  box-shadow:
-    inset 0 2px 4px rgba(0, 0, 0, 0.7),
-    0 2px 0 #1c100a;
 }
 
 .combo-bar-fill {
@@ -445,56 +421,65 @@ a:hover, a:active, a:focus {
 }
 
 body[data-hint="limit"] .touch-hint {
-  background-color: rgba(20, 18, 16, 0.97);
-  border: 1px solid var(--color-warning);
+  background: linear-gradient(180deg, #2a2320 0%, #1a1410 100%);
+  border: 2px solid var(--color-warning);
   border-radius: var(--radius-lg);
+  padding: clamp(20px, 5vw, 32px) clamp(24px, 6vw, 48px);
   box-shadow:
-    0 0 40px rgba(216, 188, 106, 0.12),
-    0 0 80px rgba(0, 0, 0, 0.65),
-    inset 0 0 40px rgba(220, 230, 240, 0.03);
+    0 0 0 4px rgba(216, 188, 106, 0.08),
+    0 0 60px rgba(216, 188, 106, 0.18),
+    0 20px 60px rgba(0, 0, 0, 0.8),
+    inset 0 0 40px rgba(0, 0, 0, 0.4);
+  text-align: center;
 }
 
 body[data-hint="limit"] .hint-limit-title {
-  font-size: clamp(20px, 5vw, 28px);
+  font-size: clamp(22px, 5.5vw, 32px);
   font-weight: 900;
+  letter-spacing: 2px;
+  text-transform: uppercase;
   color: var(--color-text-accent);
-  margin-bottom: 4px;
+  text-shadow: 0 0 12px rgba(255, 200, 80, 0.5);
+  margin-bottom: 12px;
 }
 
 body[data-hint="limit"] .hint-limit-record,
 body[data-hint="limit"] .hint-limit-streak {
-  font-size: clamp(18px, 3.4vw, 20px);
+  font-size: clamp(16px, 3.6vw, 18px);
   color: var(--color-text-main);
   letter-spacing: 0.5px;
+  padding: 6px 0;
 }
 
-body[data-hint="limit"] #limitBestScore {
-  font-size: 1.3em;
-  font-weight: 900;
-  margin-left: 4px;
+body[data-hint="limit"] .hint-limit-streak {
+  border-top: 1px solid rgba(216, 188, 106, 0.2);
+  border-bottom: 1px solid rgba(216, 188, 106, 0.2);
+  margin-top: 4px;
+  margin-bottom: 16px;
 }
 
+body[data-hint="limit"] #limitBestScore,
 body[data-hint="limit"] #limitBestStreak {
   font-size: 1.4em;
   font-weight: 900;
-  color: var(--color-timer-warning);
-  margin-left: 4px;
+  color: var(--color-warning);
+  margin-left: 6px;
+  text-shadow: 0 0 10px rgba(216, 188, 106, 0.4);
 }
 
 body[data-hint="limit"] .hint-limit-body {
-  font-size: clamp(18px, 3.4vw, 20px);
+  font-size: clamp(15px, 3.2vw, 17px);
+  line-height: 1.5;
+  letter-spacing: 0.5px;
   color: var(--color-text-main);
-  text-align: center;
 }
 
 /* ============================================================
    [BLOCK: intro]
    ============================================================ */
 
-
-
 .intro-content {
-  background-color: #2b2b2f;   /* ← цвет intro-окна */
+  background-color: #2b2b2f;
   border: 3px solid var(--color-panel-border);
   border-radius: var(--radius-lg);
   box-shadow:

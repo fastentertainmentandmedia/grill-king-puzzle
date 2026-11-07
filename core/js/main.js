@@ -18,7 +18,7 @@ import { state, updateState, resetGameState } from './state.js';
 
 const $ = createDOM({
   boardContainer:    'boardContainer',
-  startHint:         'startHint',
+  startHint:         'limitHint',
   introModal:        'introModal',
   introAccept:       'introAccept',
   limitBestScore:    'limitBestScore',
