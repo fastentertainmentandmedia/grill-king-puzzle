@@ -41,9 +41,9 @@ export const gameConfig = {
   // Спавн
   // ----------------------------------------------------------
   SPAWN_PER_STEP:     3,
-  MIN_ITEMS_ON_FIELD: 6,
+  MIN_ITEMS_ON_FIELD: 10,
   SPAWN_DELAY_MS:     200,
-  MAX_ITEMS_ON_FIELD: 43, // -1 = без лимита
+  MAX_ITEMS_ON_FIELD: 30, // -1 = без лимита
 
   // ----------------------------------------------------------
   // Комбо
@@ -78,14 +78,19 @@ export const gameConfig = {
   // weight — для взвешенного рандома (0 = не спавнится)
   // ----------------------------------------------------------
   FOOD_TYPES: [
-    { id: 'burger',   src: 'game/assets/food/burger.svg',  weight: 3 },
-    { id: 'hotdog',   src: 'game/assets/food/hotdog.svg', weight: 3 },
-    { id: 'shwarma', src: 'game/assets/food/shwarma.svg',  weight: 2 },
-    { id: 'gyros',    emoji: '🥙', name: 'гирос',   weight: 2 },
-    { id: 'kebab', src: 'game/assets/food/kebab.svg',  weight: 2 },
-    { id: 'lula',     emoji: '🍗', name: 'люля',    weight: 2 },
-    { id: 'meat',     emoji: '🍖', name: 'мясо',    weight: 1 },
-    { id: 'steak',    emoji: '🥩', name: 'стейк',   weight: 1 },
+    // основные — высокий вес (часто, легко матчатся)
+    { id: 'burger',   src: 'game/assets/food/burger.png',  weight: 5, padding: 0.1 },
+    { id: 'hotdog',   src: 'game/assets/food/hotdog.png', weight: 5, padding: 0.1 },
+    { id: 'doner',    src: 'game/assets/food/doner.png',   weight: 5, padding: 0.03 },
+    { id: 'fries',    src: 'game/assets/food/fries.svg',   weight: 4, padding: 0.03 },
+    { id: 'shwarma',  src: 'game/assets/food/shwarma.png', weight: 4, padding: 0.05 },
+    // средние
+    { id: 'gyros',    src: 'game/assets/food/gyros.png',   weight: 3, padding: 0.05 },
+    { id: 'kebab',    src: 'game/assets/food/kebab.svg',   weight: 3, padding: 0.01, scale: 1.3},
+    // редкие (напитки/соусы)
+    { id: 'ketchup',  src: 'game/assets/food/ketchup.png', weight: 2, padding: 0.05, scale: 1.2 },
+    { id: 'coke',     src: 'game/assets/food/coke.png',    weight: 2, padding: 0.05, scale: 1.2 },
+    { id: 'water',    src: 'game/assets/food/water.png',   weight: 2, padding: 0.03 },
   ],
 
   // Fit для <img>-режима (аналог INGREDIENT_FIT_*)

@@ -1,9 +1,5 @@
 // ============================================================
 // [FILE: core/js/item-renderer.js]
-// Контракт: renderItem(typeId, cfg) → HTMLElement | string.
-// Приоритет: draw → src → emoji → fallback-бейдж.
-// У возвращаемого узла draggable=false — drag отдаётся
-// родителю .item (у него draggable=true).
 // ============================================================
 
 function findType(typeId, cfg) {
@@ -40,6 +36,8 @@ export function renderItem(typeId, cfg) {
       if (canvasEl && canvasEl.nodeType === 1) {
         canvasEl.style.maxWidth = '100%';
         canvasEl.style.maxHeight = '100%';
+        const scale = def.scale ?? 1;
+        if (scale !== 1) canvasEl.style.transform = `scale(${scale})`;
         return makeNonDraggable(canvasEl);
       }
     } catch (e) {}
@@ -57,6 +55,8 @@ export function renderItem(typeId, cfg) {
     img.style.padding = ((def.padding ?? cfg.ITEM_FIT_PADDING ?? 0) * 100) + '%';
     img.style.userSelect = 'none';
     img.style.webkitUserDrag = 'none';
+    const scale = def.scale ?? 1;
+    if (scale !== 1) img.style.transform = `scale(${scale})`;
     img.onerror = () => {
       const parent = img.parentNode;
       if (parent) {
