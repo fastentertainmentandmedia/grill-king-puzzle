@@ -109,4 +109,4 @@ export const gameConfig = {
   },
 };
 
-export const DEBUG_DISABLE_LIMIT = false;
+export const DEBUG_DISABLE_LIMIT = true;

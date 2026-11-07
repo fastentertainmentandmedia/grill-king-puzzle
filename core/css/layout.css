@@ -158,7 +158,6 @@
   max-height: 100%;
   width: auto;
   height: auto;
-  filter: drop-shadow(0 3px 3px rgba(0,0,0,0.8));
   cursor: grab;
   pointer-events: auto;
   -webkit-user-drag: element;
@@ -197,21 +196,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-.merge-emoji {
-  position: absolute;
-  font-size: clamp(1.6rem, 8.5vw, 2.6rem);
-  line-height: 1;
-  transform-origin: center;
-  animation: mergePull 0.45s cubic-bezier(0.2, 0.9, 0.3, 1.2) forwards;
-}
-
-@keyframes mergePull {
-  0%   { transform: translate(var(--sx), var(--sy)) scale(1) rotate(0deg); opacity: 1; }
-  55%  { transform: translate(0, 0) scale(1.25) rotate(15deg); opacity: 1; }
-  75%  { transform: translate(0, 0) scale(1.45) rotate(-12deg); opacity: 1; }
-  100% { transform: translate(0, 0) scale(1.6) rotate(0deg); opacity: 0; }
 }
 
 .merge-flash {
@@ -414,7 +398,7 @@
 }
 
 /* ============================================================
-   [BLOCK: combo-wrap — всегда видим, как «стат»
+   [BLOCK: combo-wrap
    ============================================================ */
 
 .combo-wrap {
@@ -529,5 +513,4 @@
   .shelf { padding: 4px; }
   .cell { border-radius: 4px; }
   .item { font-size: clamp(1.4rem, 7.5vw, 2.2rem); }
-  .merge-emoji { font-size: clamp(1.4rem, 7.5vw, 2.2rem); }
 }

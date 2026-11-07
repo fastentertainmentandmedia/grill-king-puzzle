@@ -23,6 +23,12 @@
   animation: pulse-glow 1.8s ease-in-out infinite;
 }
 
+/* при limit — блокируем клики и тапы */
+body[data-hint="limit"] .touch-hint {
+  pointer-events: auto;
+  animation: none;
+}
+
 .touch-hint small { display: block; }
 
 .hint-start { display: none; }
@@ -40,7 +46,6 @@ body[data-hint="none"]  .touch-hint { display: none; }
 body[data-hint="start"] .hint-start { display: block; }
 body[data-hint="limit"] .hint-limit { display: block; }
 
-body[data-hint="limit"] .touch-hint { animation: none; }
 
 @keyframes pulse-glow {
   0%, 100% { opacity: 0.95; transform: scale(1); }

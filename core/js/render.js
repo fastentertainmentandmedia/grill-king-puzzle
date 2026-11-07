@@ -1,8 +1,5 @@
 // ============================================================
 // [FILE: core/js/render.js]
-// Скелет строится по state.SHELF_COUNT (динамически).
-// При росте/сжатии поля — перестройка скелета.
-// События comboSuper / comboLost — анимация и перестройка.
 // ============================================================
 
 import { gameConfig as cfg } from '../../game/js/config.js';
@@ -182,7 +179,7 @@ export function createRenderer(container) {
 
       if (ev.type === 'merge') {
         cellEl.querySelectorAll('.item').forEach(i => i.classList.add('match-pop'));
-        playMergeBurst(cellEl, ev.foodType);
+        playMergeBurst(cellEl);
       } else if (ev.type === 'spawn') {
         const badge = document.createElement('div');
         badge.className = 'spawn-badge';
@@ -201,15 +198,7 @@ export function createRenderer(container) {
     setTimeout(() => banner.remove(), 1400);
   }
 
-  function playMergeBurst(cellEl, foodType) {
-    const def = (cfg.FOOD_TYPES || []).find(t => t.id === foodType);
-    const emojiChar = def?.emoji || '🍽️';
-
-    const cellRect = cellEl.getBoundingClientRect();
-    const cellW = cellRect.width;
-    const colW = cellW / cfg.PLACES_PER_CELL;
-    const centerX = cellW / 2;
-
+  function playMergeBurst(cellEl) {
     const burst = document.createElement('div');
     burst.className = 'merge-burst';
 
@@ -220,21 +209,6 @@ export function createRenderer(container) {
     const ring = document.createElement('div');
     ring.className = 'merge-ring';
     burst.appendChild(ring);
-
-    const sampleItem = cellEl.querySelector('.item');
-    const mergeFont = sampleItem ? getComputedStyle(sampleItem).fontSize : '2rem';
-
-    for (let i = 0; i < 3; i++) {
-      const em = document.createElement('div');
-      em.className = 'merge-emoji';
-      em.textContent = emojiChar;
-      em.style.fontSize = mergeFont;
-      const dx = colW * i + colW / 2 - centerX;
-      em.style.setProperty('--sx', dx + 'px');
-      em.style.setProperty('--sy', '0px');
-      em.style.animationDelay = (i * 0.02) + 's';
-      burst.appendChild(em);
-    }
 
     const sparkCount = 12;
     for (let i = 0; i < sparkCount; i++) {

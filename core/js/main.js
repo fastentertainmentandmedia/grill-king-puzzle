@@ -183,6 +183,7 @@ async function bootstrap() {
     },
     onMove: (fromCell, fromPlace, toCell) => {
       if (!state.gameUnlocked) return;
+      if (state.limitReached) return;
       if (!state.gameActive) beginSession();
 
       const before = rules.getState();
@@ -382,7 +383,6 @@ async function bootstrap() {
     beginSession();
   });
 
-  // ждём загрузки всех картинок еды перед скрытием прелоадера
   await preloadFoodImages();
 }
 
