@@ -38,12 +38,12 @@ body {
   overflow: hidden;
   overscroll-behavior: none;
   position: fixed;
+  touch-action: manipulation;
 }
 
 body {
   margin: 0;
   padding: 0;
-  touch-action: manipulation;
   user-select: none;
   -webkit-user-select: none;
 }
