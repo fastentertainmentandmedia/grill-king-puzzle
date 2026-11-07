@@ -491,18 +491,31 @@ body[data-hint="limit"] .hint-limit-body {
    [BLOCK: intro]
    ============================================================ */
 
-.intro-modal {
-  background-color: rgba(0, 0, 0, 0.85);
-}
+
 
 .intro-content {
-  background-color: var(--color-intro-bg);
+  background-color: #2b2b2f;   /* ← цвет intro-окна */
   border: 3px solid var(--color-panel-border);
   border-radius: var(--radius-lg);
   box-shadow:
     0 0 40px rgba(0, 0, 0, 0.75),
     inset 0 0 60px rgba(0, 0, 0, 0.4);
   color: var(--color-text-main);
+}
+
+.intro-brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.intro-logo {
+  max-width: 70%;
+  max-height: 120px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
 }
 
 .intro-title {

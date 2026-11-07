@@ -39,16 +39,11 @@
       width: min(80vw, 420px);
       height: auto;
       display: block;
-    }
-    .preloader-burger {
-      width: min(40vw, 160px);
-      height: auto;
-      display: block;
       animation: preloader-bounce 1s ease-in-out infinite;
     }
     .preloader-text {
       opacity: .7;
-      margin-top: -4px;
+      margin-top: 10px;
     }
 
     @keyframes preloader-bounce {
@@ -66,9 +61,7 @@
 <body>
 
   <div id="preloader">
-    <img class="preloader-logo" src="game/assets/logo.svg" alt="Grill King Puzzle">
-    <img class="preloader-burger" src="game/assets/preloader.svg" alt=""
-         onerror="this.style.display='none';">
+    <img class="preloader-logo" src="game/assets/logo.png" alt="Grill King Puzzle">
     <div class="preloader-text">Загрузка...</div>
   </div>
 
@@ -129,30 +122,30 @@
     </div>
   </div>
 
-  <div class="intro-modal hidden" id="introModal" role="dialog" aria-modal="true" aria-labelledby="introTitle">
-    <div class="intro-content">
-      <div class="header-brand">
-        <img src="game/assets/logo.png" alt="Grill King Puzzle" class="header-logo"
-             onerror="this.style.display='none'; this.parentNode.textContent='GRILL KING PUZZLE';">
-      </div>
-
-      <div class="intro-rules">
-        <ul>
-          <li>Перетаскивай еду между ячейками гриля.</li>
-          <li>Собери 3 одинаковых продукта в одной ячейке — они сгорят и принесут очки.</li>
-          <li>Успевай за комбо-полоской: серия мержей ускоряет игру и даёт больше очков.</li>
-          <li>Набери как можно больше очков за <span id="introLimitMinutes">10</span> мин.</li>
-          <li>Играй сам или соревнуйся с друзьями!</li>
-        </ul>
-      </div>
-
-      <div class="intro-cookie">
-        Мы используем файлы cookie. <br>Продолжая, вы соглашаетесь с <a href="/privacy.html">политикой конфиденциальности</a>
-      </div>
-
-      <button class="intro-accept" id="introAccept" type="button">Хорошо</button>
+<div class="intro-modal hidden" id="introModal" role="dialog" aria-modal="true" aria-labelledby="introTitle">
+  <div class="intro-content">
+    <div class="intro-brand">
+      <img src="game/assets/logo.png" alt="Grill King Puzzle" class="intro-logo"
+           onerror="this.style.display='none'; this.parentNode.textContent='GRILL KING PUZZLE';">
     </div>
+
+    <div class="intro-rules">
+      <ul>
+        <li>Перетаскивай еду между ячейками гриля.</li>
+        <li>Собери 3 одинаковых продукта в одной ячейке — они сгорят и принесут очки.</li>
+        <li>Успевай за комбо-полоской: серия мержей ускоряет игру и даёт больше очков.</li>
+        <li>Набери как можно больше очков за <span id="introLimitMinutes">10</span> мин.</li>
+        <li>Играй сам или соревнуйся с друзьями!</li>
+      </ul>
+    </div>
+
+    <div class="intro-cookie">
+      Мы используем файлы cookie. <br>Продолжая, вы соглашаетесь с <a href="/privacy.html">политикой конфиденциальности</a>
+    </div>
+
+    <button class="intro-accept" id="introAccept" type="button">Хорошо</button>
   </div>
+</div>
 
   <script type="module" src="core/js/main.js"></script>
 </body>

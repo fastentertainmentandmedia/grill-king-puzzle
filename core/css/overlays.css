@@ -82,7 +82,7 @@ body[data-hint="limit"] .touch-hint { animation: none; }
   padding: clamp(20px, 5vw, 32px);
 
   text-align: center;
-  overflow-y: auto;
+  overflow-y: hidden;
 }
 
 .intro-title { margin-bottom: 16px; }

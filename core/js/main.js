@@ -100,6 +100,22 @@ function loadMetrika(id) {
 }
 
 
+function preloadFoodImages() {
+  const list = gameConfig.FOOD_TYPES || [];
+  const promises = [];
+  for (const t of list) {
+    if (!t.src) continue;
+    promises.push(new Promise((resolve) => {
+      const img = new Image();
+      img.onload = resolve;
+      img.onerror = resolve;
+      img.src = t.src;
+    }));
+  }
+  return Promise.all(promises);
+}
+
+
 async function bootstrap() {
   window.__state = state;
 
@@ -127,7 +143,7 @@ async function bootstrap() {
   window.__rules = rules;
   const renderer = createRenderer($.boardContainer);
 
-  // 4. UI (maxComboValue обновляется из comboTick, field не нужен)
+  // 4. UI
   const ui = createUI({
     $,
     limits,
@@ -242,7 +258,6 @@ async function bootstrap() {
     lastTs = 0;
   }
 
-  // 7a. Активация сессии без сброса поля
   function beginSession() {
     if (state.gameActive) return;
     limits.startSession();
@@ -255,7 +270,6 @@ async function bootstrap() {
     startRaf();
   }
 
-  // 7b. Полный сброс
   function startNewGame() {
     if (state.gameActive) limits.flushSession();
     resetGameState();
@@ -283,7 +297,6 @@ async function bootstrap() {
     });
   }
 
-  // 8. Resize
   createResize({
     target: $.boardContainer,
     onResize: (w, h) => {
@@ -293,7 +306,6 @@ async function bootstrap() {
     },
   });
 
-  // 9. Unlock
   function unlockGame() {
     if (state.gameUnlocked) return;
 
@@ -327,7 +339,6 @@ async function bootstrap() {
   const intro = createIntro({ $, gameConfig, onAccept: unlockGame });
   intro.init();
 
-  // 10. Тикер лимита
   setInterval(() => {
     if (!state.gameUnlocked) return;
     if (!state.gameActive && !state.gameStarted && limits.isLimitReached()) {
@@ -356,7 +367,6 @@ async function bootstrap() {
     }
   }, 1000);
 
-  // 11. Lifecycle
   createLifecycle({
     isActive: () => state.gameActive,
     onFlush: () => {
@@ -365,13 +375,15 @@ async function bootstrap() {
     onHide: () => {},
   });
 
-  // 12. Старт по тапу на hint
   $.startHint.addEventListener('click', () => {
     if (!state.gameUnlocked) return;
     if (state.limitReached) return;
     if (state.gameActive) return;
     beginSession();
   });
+
+  // ждём загрузки всех картинок еды перед скрытием прелоадера
+  await preloadFoodImages();
 }
 
 bootstrap().then(() => {
