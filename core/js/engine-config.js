@@ -7,9 +7,9 @@
 export const engineConfig = {
   MAX_DPR: 2,
 
-  TIMER_WARN_RATIO:     0.50,
-  TIMER_DANGER_RATIO:   0.20,
-  TIMER_CRITICAL_RATIO: 0.10,
+  TIMER_WARN_RATIO:     0.25,
+  TIMER_DANGER_RATIO:   0.1,
+  TIMER_CRITICAL_RATIO: 0.05,
 
   COLORS: {
     cellBg:        { var: '--color-cell-bg',        fallback: '#1a1410' },

@@ -443,14 +443,14 @@
   justify-content: center;
   opacity: 0;
   transition: opacity 0.25s ease;
-  margin: 0 var(--pad-panel-x);
+  margin: 25px var(--pad-panel-x) 0;
 }
 
 .combo-wrap.visible { opacity: 1; }
 
 .combo-bar-track {
   width: 100%;
-  height: 14px;
+  height: 15px;
   border-radius: 10px;
   overflow: hidden;
   position: relative;

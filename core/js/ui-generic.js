@@ -1,8 +1,5 @@
 // ============================================================
 // [FILE: core/js/ui-generic.js]
-// HUD по декларативным fields + combo-bar (собственный RAF).
-// maxComboValue показывает ТЕКУЩЕЕ комбо (comboCount),
-// hint-limit показывает рекорд стрика (limits.getBestStreak).
 // ============================================================
 
 import { state } from './state.js';
@@ -48,19 +45,17 @@ export function createUI({ $, limits, fields = [], timer = null, combo = null, h
 
     const limitMs = Math.max(1, timer.limitMinutes * 60 * 1000);
     const ratio = ms / limitMs;
-    $.hudTimer.classList.remove('is-warning', 'is-danger', 'is-critical');
 
-    if (ratio <= engineConfig.TIMER_CRITICAL_RATIO)      $.hudTimer.classList.add('is-critical');
-    else if (ratio <= engineConfig.TIMER_DANGER_RATIO)   $.hudTimer.classList.add('is-danger');
-    else if (ratio <= engineConfig.TIMER_WARN_RATIO)     $.hudTimer.classList.add('is-warning');
+    const timerBox = $.hudTimer.closest('.hud-stat.timer') || $.hudTimer;
+    timerBox.classList.remove('is-warning', 'is-danger', 'is-critical');
+
+    if (ratio <= engineConfig.TIMER_CRITICAL_RATIO)      timerBox.classList.add('is-critical');
+    else if (ratio <= engineConfig.TIMER_DANGER_RATIO)   timerBox.classList.add('is-danger');
+    else if (ratio <= engineConfig.TIMER_WARN_RATIO)     timerBox.classList.add('is-warning');
   }
 
-  // ----------------------------------------------------------
-  // Combo-bar + текущее комбо в HUD
-  // ----------------------------------------------------------
   function setupCombo() {
     if (!combo || !$.comboWrap) return;
-
     if (!rafId) {
       rafId = requestAnimationFrame(comboTick);
     }
@@ -74,7 +69,6 @@ export function createUI({ $, limits, fields = [], timer = null, combo = null, h
   function comboTick() {
     const data = comboDataProvider();
     if (data) {
-      // текущее комбо в HUD
       if ($.maxComboValue) {
         $.maxComboValue.textContent = 'x' + (data.count || 0);
       }

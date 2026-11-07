@@ -8,7 +8,7 @@
 
 export const gameConfig = {
   STORAGE_KEY: 'grill_king_puzzle',
-  PLAY_LIMIT_MINUTES: 10,
+  PLAY_LIMIT_MINUTES: 1,
   LIMIT_RESET_HOURS: 4,
 
   ASSETS: {
@@ -34,7 +34,7 @@ export const gameConfig = {
   // add — сколько полок добавить при выполнении условия.
   // ----------------------------------------------------------
   SHELF_GROWTH: [
-    { score: 0, combo: 5, add: 1, spawnPerStep: 4 },
+    { score: 0, combo: 1, add: 1, spawnPerStep: 4 },
   ],
   SHELF_MAX: 4,
 
@@ -110,4 +110,4 @@ export const gameConfig = {
   },
 };
 
-export const DEBUG_DISABLE_LIMIT = true;
+export const DEBUG_DISABLE_LIMIT = false;

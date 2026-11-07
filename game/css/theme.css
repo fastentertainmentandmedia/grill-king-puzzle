@@ -7,7 +7,7 @@
 
 :root {
   /* --- структурные переопределения --- */
-  --header-h:    56px;
+  --header-h:    75px;
   --gap-sm:      8px;
   --field-aspect: 1.4;
 
@@ -308,27 +308,54 @@ a:hover, a:active, a:focus {
 }
 
 /* таймер (лимит) */
-.hud-timer {
+
+.hud-stat.timer {
+  background: #4a6a8a;
+  border: 2px solid #34506a;
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.25),
+    0 4px 0 #22364a;
+  color: #fff;
+  text-shadow: 0 1px 0 #22364a;
+  transition: font-size .2s, transform .2s, opacity .2s;
+}
+
+.hud-stat.timer .hud-timer {
   font-family: var(--font-mono);
   font-weight: 900;
-  color: var(--color-timer-normal);
-  text-shadow: 0 0 8px rgba(156, 204, 122, 0.18);
-  transition: color .2s, font-size .2s, opacity .2s;
 }
-.hud-timer.is-warning  {
-  color: var(--color-timer-warning);
-  text-shadow: 0 0 8px rgba(216, 188, 106, 0.22);
+
+.hud-stat.timer.is-warning {
+  background: #8a6a3a;
+  border-color: #6a4a1a;
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.25),
+    0 4px 0 #4a3210;
+  font-size: 1.1em;
 }
-.hud-timer.is-danger,
-.hud-timer.is-critical {
-  color: var(--color-timer-danger);
-  text-shadow: 0 0 12px rgba(216, 106, 90, 0.42);
+
+.hud-stat.timer.is-danger {
+  background: #8a3a3a;
+  border-color: #6a1a1a;
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.25),
+    0 4px 0 #4a1010;
+  font-size: 1.2em;
 }
-.hud-timer.is-critical { animation: hud-timer-pulse 1s ease-in-out infinite; }
+
+.hud-stat.timer.is-critical {
+  background: #8a1a1a;
+  border-color: #6a0a0a;
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.25),
+    0 4px 0 #4a0505;
+  font-size: 1.3em;
+  animation: hud-timer-pulse 0.8s ease-in-out infinite;
+}
 
 @keyframes hud-timer-pulse {
-  0%, 100% { opacity: 1; }
-  50%      { opacity: .6; }
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%      { opacity: 0.6; transform: scale(1.05); }
 }
 
 /* ============================================================
