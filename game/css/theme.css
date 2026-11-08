@@ -136,7 +136,12 @@ a:hover, a:active, a:focus {
   inset: 0;
   z-index: 1;
   background: radial-gradient(ellipse at 50% 50%,
-    #ff7b1a 0%, #ea3e00 18%, #a52100 45%, #3c0f00 78%, #1a0800 100%);
+    #ff7b1a 0%,
+    #e83500 20%,   /* краснее */
+    #8c1500 45%,   /* тёмно-красный */
+    #3c0a00 78%,
+    #1a0600 100%
+);
   opacity: 0.9;
 }
 
@@ -160,14 +165,22 @@ a:hover, a:active, a:focus {
   background-image:
     repeating-linear-gradient(0deg,
       transparent 0px, transparent 9px,
-      var(--color-grill-bar-dark) 9px, var(--color-grill-bar) 11px,
-      #4d3e32 13px, transparent 13px, transparent 22px),
+      #101214 9px,
+      #5a6268 10px,
+      #c8d0d5 11px,
+      #7a8288 12px,
+      #2a2e32 13px,
+      transparent 13px, transparent 22px),
     repeating-linear-gradient(90deg,
       transparent 0px, transparent 26px,
-      #5e4d3e 26px, #b09b85 28px, #463a2f 30px,
+      #101214 26px,
+      #5a6268 27px,
+      #c8d0d5 28px,
+      #7a8288 29px,
+      #2a2e32 30px,
       transparent 30px, transparent 56px);
   box-shadow:
-    inset 0 0 0 1px #221e19,
+    inset 0 0 0 1px #0a0c0e,
     inset 0 0 15px #00000088;
   opacity: 0.95;
 }
@@ -176,10 +189,19 @@ a:hover, a:active, a:focus {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(105deg,
-    rgba(255, 255, 255, 0.10) 0%,
-    transparent 40%, transparent 70%,
-    rgba(255, 255, 255, 0.06) 100%);
+  background:
+    linear-gradient(105deg,
+      rgba(255, 255, 255, 0.22) 0%,
+      rgba(255, 255, 255, 0.06) 22%,
+      transparent 42%,
+      transparent 60%,
+      rgba(255, 255, 255, 0.14) 82%,
+      rgba(255, 255, 255, 0.02) 100%),
+    linear-gradient(180deg,
+      rgba(0, 0, 0, 0.35) 0%,
+      transparent 30%,
+      transparent 70%,
+      rgba(0, 0, 0, 0.25) 100%);
   pointer-events: none;
 }
 

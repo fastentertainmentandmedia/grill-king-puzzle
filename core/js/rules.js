@@ -1,6 +1,7 @@
 // ============================================================
 // [FILE: core/js/rules.js]
-// Динамическая полка по стрику + гарантированная защита от тупика.
+// Защита от тупика: срабатывает ТОЛЬКО при риске (мало свободных
+// мест или мало разных типов), иначе — обычный рандом.
 // ============================================================
 
 import { gameConfig as cfg } from '../../game/js/config.js';
@@ -48,6 +49,9 @@ export function createRules() {
 
   let activeGrowthIdx = -1;
 
+  // счётчик «форс-спавнов» подряд — чтобы не зацикливаться
+  let forceStreak = 0;
+
   function countItemsOnField() {
     let n = 0;
     for (let i = 0; i < totalSlots; i++) n += slots[i].length;
@@ -64,51 +68,80 @@ export function createRules() {
     return result;
   }
 
+  function countEmptyPlaces() {
+    let n = 0;
+    for (let i = 0; i < totalSlots; i++) {
+      n += PLACES_PER_CELL - slots[i].length;
+    }
+    return n;
+  }
+
+  function countDistinctTypes() {
+    const set = new Set();
+    for (let i = 0; i < totalSlots; i++) {
+      for (const it of slots[i]) set.add(it.type);
+    }
+    return set.size;
+  }
+
   // ----------------------------------------------------------
-  // Анти-тупик: выбрать тип для спавна
-  // 1) если есть ячейка с 2 одинаковыми — добавить третий (форс-матч)
-  // 2) иначе если есть ячейка с 1 и где-то ещё такой же тип — добавить в неё
-  // 3) иначе обычный взвешенный рандом
-  // Работает при любых FOOD_TYPES/весах/MAX_ITEMS_ON_FIELD.
+  // Анти-тупик: обычный рандом, но если поле близко к заполнению
+  // ИЛИ на поле мало разных типов — форсим матч.
+  // forceStreak не даёт зацикливаться на одном типе.
   // ----------------------------------------------------------
   function pickTypeAntiStuck() {
-    // 1) ячейка с 2 одинаковыми и одним свободным местом
+    const total = totalSlots * PLACES_PER_CELL;
+    const empty = countEmptyPlaces();
+    const distinct = countDistinctTypes();
+    const totalTypes = FOOD_IDS.length;
+
+    // риск тупика: меньше 25% свободных мест или мало разных типов
+    const nearFull  = empty < total * 0.25;
+    const fewTypes  = distinct < Math.max(3, totalTypes / 3);
+
+    const needForce = (nearFull || fewTypes) && forceStreak < 2;
+
+    if (!needForce) {
+      forceStreak = 0;
+      return pickWeightedType();
+    }
+
+    // 1) ячейка с 2 одинаковыми → добавить третий
     const pairs = [];
     for (let i = 0; i < totalSlots; i++) {
       const arr = slots[i];
-      if (arr.length === PLACES_PER_CELL - 1) {
-        if (arr.length === 2 && arr[0].type === arr[1].type) {
-          pairs.push({ cell: i, type: arr[0].type });
-        }
+      if (arr.length === PLACES_PER_CELL - 1 &&
+          arr[0].type === arr[1].type) {
+        pairs.push(arr[0].type);
       }
     }
     if (pairs.length > 0) {
-      return pairs[Math.floor(Math.random() * pairs.length)].type;
+      forceStreak++;
+      return pairs[Math.floor(Math.random() * pairs.length)];
     }
 
-    // 2) ячейка с 1 item, у которой тип встречается ещё где-то на поле
-    // (чтобы создать пару, которая потом превратится в тройку)
-    const singles = [];
+    // 2) ячейка с 1 item и тип встречается ещё где-то → создать пару
     const typeCounts = {};
     for (let i = 0; i < totalSlots; i++) {
       for (const it of slots[i]) {
         typeCounts[it.type] = (typeCounts[it.type] || 0) + 1;
       }
     }
+    const singles = [];
     for (let i = 0; i < totalSlots; i++) {
       const arr = slots[i];
       if (arr.length >= 1 && arr.length < PLACES_PER_CELL) {
         const t = arr[0].type;
-        if ((typeCounts[t] || 0) >= 2) {
-          singles.push(t);
-        }
+        if ((typeCounts[t] || 0) >= 2) singles.push(t);
       }
     }
     if (singles.length > 0) {
+      forceStreak++;
       return singles[Math.floor(Math.random() * singles.length)];
     }
 
-    // 3) обычный рандом
+    // нечего форсить — обычный рандом
+    forceStreak = 0;
     return pickWeightedType();
   }
 
@@ -291,6 +324,7 @@ export function createRules() {
     totalSlots = shelfCount * CELLS_PER_SHELF;
     currentSpawnPerStep = cfg.SPAWN_PER_STEP;
     activeGrowthIdx = -1;
+    forceStreak = 0;
     slots = new Array(totalSlots).fill(null).map(() => []);
     const capacity = totalSlots * PLACES_PER_CELL;
     const fillCount = Math.floor(capacity * 0.6);

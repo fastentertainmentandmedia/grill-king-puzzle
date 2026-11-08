@@ -33,7 +33,7 @@ export const gameConfig = {
   // add — сколько полок добавить при выполнении условия.
   // ----------------------------------------------------------
   SHELF_GROWTH: [
-    { score: 0, combo: 1, add: 1, spawnPerStep: 4 },
+    { score: 0, combo: 7, add: 1, spawnPerStep: 4 },
   ],
   SHELF_MAX: 4,
 
