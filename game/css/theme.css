@@ -202,11 +202,14 @@ a:hover, a:active, a:focus {
    [BLOCK: item / анимации мержа]
    ============================================================ */
 
+.item {
+  filter: drop-shadow(0 3px 3px var(--color-item-shadow));
+}
+
 .item:active { cursor: grabbing; }
 
-.item img,
-.item canvas {
-  filter: drop-shadow(0 2px 2px var(--color-item-shadow));
+.merge-emoji {
+  filter: drop-shadow(0 0 10px #fff2c4) drop-shadow(0 0 18px #ffb020);
 }
 
 .merge-flash {
@@ -228,6 +231,10 @@ a:hover, a:active, a:focus {
 .spawn-badge {
   color: var(--color-spawn-badge);
   text-shadow: 0 0 10px #ff9b00, 0 0 20px #ff6400;
+}
+
+.item.match-pop {
+  filter: brightness(2.4) drop-shadow(0 0 12px #ffb86b);
 }
 
 /* ============================================================
@@ -339,7 +346,7 @@ a:hover, a:active, a:focus {
   background: var(--color-combo-track);
   border: 2px solid var(--color-combo-track-b);
   border-radius: var(--radius-md);
-  padding: 3px 6px 4px;
+  padding: 0;
   box-shadow:
     inset 0 2px 4px rgba(0, 0, 0, 0.7),
     0 2px 0 #1c100a;
@@ -424,7 +431,6 @@ body[data-hint="limit"] .touch-hint {
     0 20px 60px rgba(0, 0, 0, 0.8),
     inset 0 0 40px rgba(0, 0, 0, 0.4);
   text-align: center;
-  pointer-events: auto;
 }
 
 body[data-hint="limit"] .hint-limit-title {

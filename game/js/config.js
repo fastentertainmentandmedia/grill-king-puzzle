@@ -8,7 +8,7 @@
 
 export const gameConfig = {
   STORAGE_KEY: 'grill_king_puzzle',
-  PLAY_LIMIT_MINUTES: 1,
+  PLAY_LIMIT_MINUTES: 5,
   LIMIT_RESET_HOURS: 4,
 
   ASSETS: {
@@ -79,13 +79,13 @@ export const gameConfig = {
   // ----------------------------------------------------------
   FOOD_TYPES: [
     // основные — высокий вес (часто, легко матчатся)
-    { id: 'burger',   src: 'game/assets/food/burger.png',  weight: 5, padding: 0.1 },
+    { id: 'burger',   src: 'game/assets/food/burger.png',  weight: 3, padding: 0.1 },
     { id: 'hotdog',   src: 'game/assets/food/hotdog.png', weight: 5, padding: 0.1 },
     { id: 'doner',    src: 'game/assets/food/doner.png',   weight: 5, padding: 0.03 },
     { id: 'fries',    src: 'game/assets/food/fries.svg',   weight: 4, padding: 0.03 },
-    { id: 'shwarma',  src: 'game/assets/food/shwarma.png', weight: 4, padding: 0.05 },
+    { id: 'shwarma',  src: 'game/assets/food/shwarma.png', weight: 5, padding: 0.05 },
     // средние
-    { id: 'gyros',    src: 'game/assets/food/gyros.png',   weight: 3, padding: 0.05 },
+    { id: 'gyros',    src: 'game/assets/food/gyros.png',   weight: 4, padding: 0.05 },
     { id: 'kebab',    src: 'game/assets/food/kebab.svg',   weight: 3, padding: 0.01, scale: 1.3},
     // редкие (напитки/соусы)
     { id: 'ketchup',  src: 'game/assets/food/ketchup.png', weight: 2, padding: 0.05, scale: 1.2 },
