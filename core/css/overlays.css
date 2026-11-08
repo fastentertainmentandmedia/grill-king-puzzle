@@ -60,6 +60,9 @@ body[data-hint="limit"] .hint-limit { display: block; }
 
   padding: 16px;
 
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+
   transition: opacity var(--t-base), visibility var(--t-base);
 }
 
