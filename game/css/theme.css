@@ -129,40 +129,27 @@ a:hover, a:active, a:focus {
   filter: brightness(1.2);
 }
 
+/* статичные угли — без анимации, без blend-mode, без blur */
 .cell::before {
   content: "";
   position: absolute;
   inset: 0;
   z-index: 1;
-  background:
-    radial-gradient(ellipse at 25% 45%, #ff7b1a 0%, #ea3e00 18%, #a52100 45%, #3c0f00 78%, #1a0800 100%),
-    radial-gradient(ellipse at 75% 60%, #ffb347 0%, #d94a00 28%, #7a2200 62%, #2e0a00 100%),
-    radial-gradient(ellipse at 50% 25%, #ffdd99 0%, #ff6600 20%, #b32d00 58%, #2a0500 100%);
-  background-blend-mode: overlay, screen, normal;
-  filter: brightness(1.2) blur(0.5px);
+  background: radial-gradient(ellipse at 50% 50%,
+    #ff7b1a 0%, #ea3e00 18%, #a52100 45%, #3c0f00 78%, #1a0800 100%);
   opacity: 0.9;
-  animation: emberGlow 2.6s infinite alternate ease-in-out;
 }
 
+/* блик углей — убран blend-mode */
 .cell::after {
   content: "";
   position: absolute;
   inset: 0;
   z-index: 3;
   pointer-events: none;
-  background: radial-gradient(ellipse at 40% 40%, rgba(255, 220, 120, 0.22) 0%, transparent 65%);
-  mix-blend-mode: overlay;
+  background: radial-gradient(ellipse at 40% 40%,
+    rgba(255, 220, 120, 0.22) 0%, transparent 65%);
   opacity: 0.6;
-}
-
-.cell:nth-child(odd)::before { animation-duration: 2.2s; animation-delay: -0.5s; }
-.cell:nth-child(3n)::before  { animation-duration: 3.1s; animation-delay: -1s; }
-
-@keyframes emberGlow {
-  0%   { opacity: 0.75; filter: brightness(1.1) blur(0.5px); }
-  30%  { opacity: 0.95; filter: brightness(1.35) blur(1px); }
-  60%  { opacity: 0.85; filter: brightness(1.2) blur(0.8px); }
-  100% { opacity: 0.98; filter: brightness(1.4) blur(1.2px); }
 }
 
 .grill-bars {
@@ -182,7 +169,6 @@ a:hover, a:active, a:focus {
   box-shadow:
     inset 0 0 0 1px #221e19,
     inset 0 0 15px #00000088;
-  filter: drop-shadow(0 0 3px #00000099);
   opacity: 0.95;
 }
 
@@ -194,7 +180,6 @@ a:hover, a:active, a:focus {
     rgba(255, 255, 255, 0.10) 0%,
     transparent 40%, transparent 70%,
     rgba(255, 255, 255, 0.06) 100%);
-  mix-blend-mode: overlay;
   pointer-events: none;
 }
 
@@ -202,14 +187,11 @@ a:hover, a:active, a:focus {
    [BLOCK: item / анимации мержа]
    ============================================================ */
 
-.item {
-  filter: drop-shadow(0 3px 3px var(--color-item-shadow));
-}
-
 .item:active { cursor: grabbing; }
 
-.merge-emoji {
-  filter: drop-shadow(0 0 10px #fff2c4) drop-shadow(0 0 18px #ffb020);
+.item img,
+.item canvas {
+  filter: drop-shadow(0 2px 2px var(--color-item-shadow));
 }
 
 .merge-flash {
@@ -231,10 +213,6 @@ a:hover, a:active, a:focus {
 .spawn-badge {
   color: var(--color-spawn-badge);
   text-shadow: 0 0 10px #ff9b00, 0 0 20px #ff6400;
-}
-
-.item.match-pop {
-  filter: brightness(2.4) drop-shadow(0 0 12px #ffb86b);
 }
 
 /* ============================================================
@@ -297,12 +275,19 @@ a:hover, a:active, a:focus {
     0 4px 0 #22364a;
   color: #fff;
   text-shadow: 0 1px 0 #22364a;
-  transition: font-size .2s, transform .2s, opacity .2s;
+  transition: transform .2s, opacity .2s;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  overflow: hidden;
 }
 
 .hud-stat.timer .hud-timer {
   font-family: var(--font-mono);
   font-weight: 900;
+  display: block;
+  width: 100%;
+  text-align: center;
 }
 
 .hud-stat.timer.is-warning {
@@ -311,7 +296,7 @@ a:hover, a:active, a:focus {
   box-shadow:
     inset 0 2px 0 rgba(255, 255, 255, 0.25),
     0 4px 0 #4a3210;
-  font-size: 1.1em;
+  transform: scale(1.05);
 }
 
 .hud-stat.timer.is-danger {
@@ -320,7 +305,7 @@ a:hover, a:active, a:focus {
   box-shadow:
     inset 0 2px 0 rgba(255, 255, 255, 0.25),
     0 4px 0 #4a1010;
-  font-size: 1.2em;
+  transform: scale(1.1);
 }
 
 .hud-stat.timer.is-critical {
@@ -329,13 +314,13 @@ a:hover, a:active, a:focus {
   box-shadow:
     inset 0 2px 0 rgba(255, 255, 255, 0.25),
     0 4px 0 #4a0505;
-  font-size: 1.3em;
+  transform: scale(1.1);
   animation: hud-timer-pulse 0.8s ease-in-out infinite;
 }
 
 @keyframes hud-timer-pulse {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50%      { opacity: 0.6; transform: scale(1.05); }
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.6; }
 }
 
 /* ============================================================
@@ -347,6 +332,7 @@ a:hover, a:active, a:focus {
   border: 2px solid var(--color-combo-track-b);
   border-radius: var(--radius-md);
   padding: 0;
+  overflow: hidden;
   box-shadow:
     inset 0 2px 4px rgba(0, 0, 0, 0.7),
     0 2px 0 #1c100a;
@@ -356,6 +342,9 @@ a:hover, a:active, a:focus {
   background: transparent;
   border: none;
   box-shadow: none;
+  width: 100%;
+  height: 100%;
+  border-radius: 0;
 }
 
 .combo-bar-fill {
@@ -364,6 +353,7 @@ a:hover, a:active, a:focus {
   box-shadow:
     inset 0 2px 0 rgba(255, 255, 255, 0.5),
     0 0 10px rgba(255, 140, 0, 0.7);
+  border-radius: 0;
 }
 
 .combo-wrap.fast .combo-bar-fill {
@@ -431,6 +421,7 @@ body[data-hint="limit"] .touch-hint {
     0 20px 60px rgba(0, 0, 0, 0.8),
     inset 0 0 40px rgba(0, 0, 0, 0.4);
   text-align: center;
+  pointer-events: auto;
 }
 
 body[data-hint="limit"] .hint-limit-title {
