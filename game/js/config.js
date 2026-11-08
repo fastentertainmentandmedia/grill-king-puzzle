@@ -33,27 +33,21 @@ export const gameConfig = {
   // add — сколько полок добавить при выполнении условия.
   // ----------------------------------------------------------
   SHELF_GROWTH: [
-    { score: 0, combo: 7, add: 1, spawnPerStep: 4 },
+    { score: 0, combo: 5, add: 1, spawnPerStep: 4 },
   ],
   SHELF_MAX: 4,
 
-  // ----------------------------------------------------------
-  // Спавн
-  // ----------------------------------------------------------
   SPAWN_PER_STEP:     3,
   MIN_ITEMS_ON_FIELD: 10,
-  SPAWN_DELAY_MS:     200,
-  MAX_ITEMS_ON_FIELD: 30, // -1 = без лимита
+  SPAWN_DELAY_MS:     180,
+  MAX_ITEMS_ON_FIELD: 28,
 
-  // ----------------------------------------------------------
-  // Комбо
-  // ----------------------------------------------------------
-  COMBO_BASE_DURATION_MS:        9000,
-  COMBO_MIN_DURATION_MS:         1000,
-  COMBO_SPEEDUP_PER_LEVEL:       0.05,
-  COMBO_SPEEDUP_PER_SCORE_BONUS: 0.03,
-  COMBO_SCORE_STEP:              100,
-  COMBO_BASE_POINTS:             10,
+  COMBO_BASE_DURATION_MS:        6000,
+  COMBO_MIN_DURATION_MS:         1200,
+  COMBO_SPEEDUP_PER_LEVEL:       0.06,
+  COMBO_SPEEDUP_PER_SCORE_BONUS: 0.02,
+  COMBO_SCORE_STEP:              150,
+  COMBO_BASE_POINTS:             12,
 
   // ----------------------------------------------------------
   // Тексты HUD
