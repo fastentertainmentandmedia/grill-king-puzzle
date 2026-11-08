@@ -42,8 +42,8 @@ export const gameConfig = {
   SPAWN_DELAY_MS:     180,
   MAX_ITEMS_ON_FIELD: 28,
 
-  COMBO_BASE_DURATION_MS:        8000,
-  COMBO_MIN_DURATION_MS:         2500,
+  COMBO_BASE_DURATION_MS:        7500,
+  COMBO_MIN_DURATION_MS:         2000,
   COMBO_SPEEDUP_PER_LEVEL:       0.025,
   COMBO_SPEEDUP_PER_SCORE_BONUS: 0.008,
   COMBO_SCORE_STEP:              250,
@@ -55,7 +55,6 @@ export const gameConfig = {
   TEXTS: {
     scoreLabel:    'Очки',
     maxComboLabel: 'Комбо',
-    resetLabel:    '↺ Заново',
     comboPrefix:   'КОМБО',
     spawnFlash:    '✨',
     comboSuper: 'СУПЕР-КОМБО!',

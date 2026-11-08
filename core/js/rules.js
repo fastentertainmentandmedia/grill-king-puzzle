@@ -23,7 +23,6 @@ function pickWeightedType() {
   return pool[Math.floor(Math.random() * pool.length)];
 }
 
-// нелинейный множитель комбо + потолок
 function comboMultiplier(comboCount) {
   const raw = 1 + Math.sqrt(Math.max(0, comboCount - 1)) * 0.6;
   return Math.min(raw, 6);
@@ -86,22 +85,42 @@ export function createRules() {
     return set.size;
   }
 
+  function buildTypeCounts() {
+    const counts = {};
+    for (let i = 0; i < totalSlots; i++) {
+      for (const it of slots[i]) {
+        counts[it.type] = (counts[it.type] || 0) + 1;
+      }
+    }
+    return counts;
+  }
+
+  function hasAnyPair(counts) {
+    for (const t in counts) {
+      if (counts[t] >= 2) return true;
+    }
+    return false;
+  }
+
   function pickTypeAntiStuck() {
     const total = totalSlots * PLACES_PER_CELL;
     const empty = countEmptyPlaces();
     const distinct = countDistinctTypes();
     const totalTypes = FOOD_IDS.length;
+    const typeCounts = buildTypeCounts();
 
     const nearFull  = empty < total * 0.25;
     const fewTypes  = distinct < Math.max(3, totalTypes / 3);
+    const noPairs   = !hasAnyPair(typeCounts); // ни одного типа 2+ раз — точно тупик
 
-    const needForce = (nearFull || fewTypes) && forceStreak < 2;
+    const needForce = (nearFull || fewTypes || noPairs) && forceStreak < 2;
 
     if (!needForce) {
       forceStreak = 0;
       return pickWeightedType();
     }
 
+    // 1) ячейка с 2 одинаковыми → добавить третий
     const pairs = [];
     for (let i = 0; i < totalSlots; i++) {
       const arr = slots[i];
@@ -115,12 +134,7 @@ export function createRules() {
       return pairs[Math.floor(Math.random() * pairs.length)];
     }
 
-    const typeCounts = {};
-    for (let i = 0; i < totalSlots; i++) {
-      for (const it of slots[i]) {
-        typeCounts[it.type] = (typeCounts[it.type] || 0) + 1;
-      }
-    }
+    // 2) ячейка с 1 item и тип встречается ещё где-то → создать пару
     const singles = [];
     for (let i = 0; i < totalSlots; i++) {
       const arr = slots[i];
@@ -132,6 +146,20 @@ export function createRules() {
     if (singles.length > 0) {
       forceStreak++;
       return singles[Math.floor(Math.random() * singles.length)];
+    }
+
+    // 3) на поле нет пар вообще — взять тип из любой неполной ячейки
+    //    и создать вторую копию (формируем пару с нуля)
+    const anyIncomplete = [];
+    for (let i = 0; i < totalSlots; i++) {
+      const arr = slots[i];
+      if (arr.length >= 1 && arr.length < PLACES_PER_CELL) {
+        anyIncomplete.push(arr[0].type);
+      }
+    }
+    if (anyIncomplete.length > 0) {
+      forceStreak++;
+      return anyIncomplete[Math.floor(Math.random() * anyIncomplete.length)];
     }
 
     forceStreak = 0;
@@ -247,9 +275,35 @@ export function createRules() {
     const removed = shelfCount - newShelves;
 
     if (removed > 0) {
-      slots.splice(totalSlots - removed * CELLS_PER_SHELF, removed * CELLS_PER_SHELF);
+      const cutFrom = totalSlots - removed * CELLS_PER_SHELF;
+      const itemsToMove = [];
+      for (let i = cutFrom; i < totalSlots; i++) {
+        for (const it of slots[i]) itemsToMove.push(it);
+      }
+
+      slots.splice(cutFrom, removed * CELLS_PER_SHELF);
       shelfCount = newShelves;
       totalSlots = shelfCount * CELLS_PER_SHELF;
+
+      // переносим item с удалённой полки в свободные места
+      for (const it of itemsToMove) {
+        const free = listFreePlaces();
+        if (free.length === 0) break;
+        const spot = free[Math.floor(Math.random() * free.length)];
+        slots[spot.cell].push(it);
+      }
+
+      // если после сжатия поле переполнено — убрать лишнее
+      const overflow = countItemsOnField() - cfg.MAX_ITEMS_ON_FIELD;
+      if (cfg.MAX_ITEMS_ON_FIELD >= 0 && overflow > 0) {
+        let removedCount = 0;
+        for (let i = totalSlots - 1; i >= 0 && removedCount < overflow; i--) {
+          while (slots[i].length > 0 && removedCount < overflow) {
+            slots[i].pop();
+            removedCount++;
+          }
+        }
+      }
     }
 
     currentSpawnPerStep = cfg.SPAWN_PER_STEP;
@@ -288,7 +342,6 @@ export function createRules() {
     const mult = comboMultiplier(startOrExtendCombo());
     const pointsPerCell = Math.round(cfg.COMBO_BASE_POINTS * mult);
 
-    // первый матч — полная цена, каждый следующий в этом же тике — 50%
     for (let i = 0; i < cells.length; i++) {
       score += i === 0 ? pointsPerCell : Math.round(pointsPerCell * 0.5);
     }
