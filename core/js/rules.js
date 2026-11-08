@@ -1,7 +1,5 @@
 // ============================================================
 // [FILE: core/js/rules.js]
-// Защита от тупика: срабатывает ТОЛЬКО при риске (мало свободных
-// мест или мало разных типов), иначе — обычный рандом.
 // ============================================================
 
 import { gameConfig as cfg } from '../../game/js/config.js';
@@ -23,6 +21,12 @@ function pickWeightedType() {
   }
   if (pool.length === 0) return FOOD_IDS[0];
   return pool[Math.floor(Math.random() * pool.length)];
+}
+
+// нелинейный множитель комбо + потолок
+function comboMultiplier(comboCount) {
+  const raw = 1 + Math.sqrt(Math.max(0, comboCount - 1)) * 0.6;
+  return Math.min(raw, 6);
 }
 
 export function createRules() {
@@ -48,8 +52,6 @@ export function createRules() {
   let events = [];
 
   let activeGrowthIdx = -1;
-
-  // счётчик «форс-спавнов» подряд — чтобы не зацикливаться
   let forceStreak = 0;
 
   function countItemsOnField() {
@@ -84,18 +86,12 @@ export function createRules() {
     return set.size;
   }
 
-  // ----------------------------------------------------------
-  // Анти-тупик: обычный рандом, но если поле близко к заполнению
-  // ИЛИ на поле мало разных типов — форсим матч.
-  // forceStreak не даёт зацикливаться на одном типе.
-  // ----------------------------------------------------------
   function pickTypeAntiStuck() {
     const total = totalSlots * PLACES_PER_CELL;
     const empty = countEmptyPlaces();
     const distinct = countDistinctTypes();
     const totalTypes = FOOD_IDS.length;
 
-    // риск тупика: меньше 25% свободных мест или мало разных типов
     const nearFull  = empty < total * 0.25;
     const fewTypes  = distinct < Math.max(3, totalTypes / 3);
 
@@ -106,7 +102,6 @@ export function createRules() {
       return pickWeightedType();
     }
 
-    // 1) ячейка с 2 одинаковыми → добавить третий
     const pairs = [];
     for (let i = 0; i < totalSlots; i++) {
       const arr = slots[i];
@@ -120,7 +115,6 @@ export function createRules() {
       return pairs[Math.floor(Math.random() * pairs.length)];
     }
 
-    // 2) ячейка с 1 item и тип встречается ещё где-то → создать пару
     const typeCounts = {};
     for (let i = 0; i < totalSlots; i++) {
       for (const it of slots[i]) {
@@ -140,7 +134,6 @@ export function createRules() {
       return singles[Math.floor(Math.random() * singles.length)];
     }
 
-    // нечего форсить — обычный рандом
     forceStreak = 0;
     return pickWeightedType();
   }
@@ -292,9 +285,13 @@ export function createRules() {
     const cells = findMatchCells();
     if (cells.length === 0) return false;
 
-    const mult = startOrExtendCombo();
-    const pointsPerCell = cfg.COMBO_BASE_POINTS * mult;
-    score += pointsPerCell * cells.length;
+    const mult = comboMultiplier(startOrExtendCombo());
+    const pointsPerCell = Math.round(cfg.COMBO_BASE_POINTS * mult);
+
+    // первый матч — полная цена, каждый следующий в этом же тике — 50%
+    for (let i = 0; i < cells.length; i++) {
+      score += i === 0 ? pointsPerCell : Math.round(pointsPerCell * 0.5);
+    }
 
     for (const ci of cells) {
       const firstItem = slots[ci][0];

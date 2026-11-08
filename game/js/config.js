@@ -35,7 +35,7 @@ export const gameConfig = {
   SHELF_GROWTH: [
     { score: 0, combo: 4, add: 1, spawnPerStep: 4 },
   ],
-  SHELF_MAX: 4,
+  SHELF_MAX: 3,
 
   SPAWN_PER_STEP:     3,
   MIN_ITEMS_ON_FIELD: 10,
