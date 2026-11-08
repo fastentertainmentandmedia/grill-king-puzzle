@@ -1,7 +1,6 @@
 // ============================================================
 // [FILE: core/js/rules.js]
-// Динамическая полка по стрику: появляется при comboCount >= combo,
-// исчезает при breakCombo. Событие 'comboSuper' для анимации.
+// Динамическая полка по стрику + гарантированная защита от тупика.
 // ============================================================
 
 import { gameConfig as cfg } from '../../game/js/config.js';
@@ -47,7 +46,6 @@ export function createRules() {
   let nowMs = 0;
   let events = [];
 
-  // индекс активной "супер-полки" (из SHELF_GROWTH), -1 если нет
   let activeGrowthIdx = -1;
 
   function countItemsOnField() {
@@ -66,13 +64,61 @@ export function createRules() {
     return result;
   }
 
+  // ----------------------------------------------------------
+  // Анти-тупик: выбрать тип для спавна
+  // 1) если есть ячейка с 2 одинаковыми — добавить третий (форс-матч)
+  // 2) иначе если есть ячейка с 1 и где-то ещё такой же тип — добавить в неё
+  // 3) иначе обычный взвешенный рандом
+  // Работает при любых FOOD_TYPES/весах/MAX_ITEMS_ON_FIELD.
+  // ----------------------------------------------------------
+  function pickTypeAntiStuck() {
+    // 1) ячейка с 2 одинаковыми и одним свободным местом
+    const pairs = [];
+    for (let i = 0; i < totalSlots; i++) {
+      const arr = slots[i];
+      if (arr.length === PLACES_PER_CELL - 1) {
+        if (arr.length === 2 && arr[0].type === arr[1].type) {
+          pairs.push({ cell: i, type: arr[0].type });
+        }
+      }
+    }
+    if (pairs.length > 0) {
+      return pairs[Math.floor(Math.random() * pairs.length)].type;
+    }
+
+    // 2) ячейка с 1 item, у которой тип встречается ещё где-то на поле
+    // (чтобы создать пару, которая потом превратится в тройку)
+    const singles = [];
+    const typeCounts = {};
+    for (let i = 0; i < totalSlots; i++) {
+      for (const it of slots[i]) {
+        typeCounts[it.type] = (typeCounts[it.type] || 0) + 1;
+      }
+    }
+    for (let i = 0; i < totalSlots; i++) {
+      const arr = slots[i];
+      if (arr.length >= 1 && arr.length < PLACES_PER_CELL) {
+        const t = arr[0].type;
+        if ((typeCounts[t] || 0) >= 2) {
+          singles.push(t);
+        }
+      }
+    }
+    if (singles.length > 0) {
+      return singles[Math.floor(Math.random() * singles.length)];
+    }
+
+    // 3) обычный рандом
+    return pickWeightedType();
+  }
+
   function spawnOneItem() {
     if (cfg.MAX_ITEMS_ON_FIELD >= 0 &&
         countItemsOnField() >= cfg.MAX_ITEMS_ON_FIELD) return null;
     const free = listFreePlaces();
     if (free.length === 0) return null;
     const spot = free[Math.floor(Math.random() * free.length)];
-    const type = pickWeightedType();
+    const type = pickTypeAntiStuck();
     slots[spot.cell].push({ type });
     return { cellIndex: spot.cell, placeIndex: slots[spot.cell].length - 1, type };
   }
@@ -128,9 +174,6 @@ export function createRules() {
     removeSuperShelf();
   }
 
-  // ----------------------------------------------------------
-  // Супер-полка по стрику
-  // ----------------------------------------------------------
   function findGrowthRule() {
     for (let i = 0; i < SHELF_GROWTH.length; i++) {
       const rule = SHELF_GROWTH[i];
@@ -177,7 +220,6 @@ export function createRules() {
     const newShelves = Math.max(cfg.SHELF_COUNT, shelfCount - add);
     const removed = shelfCount - newShelves;
 
-    // убираем полки с конца, сдвигая оставшиеся слоты
     if (removed > 0) {
       slots.splice(totalSlots - removed * CELLS_PER_SHELF, removed * CELLS_PER_SHELF);
       shelfCount = newShelves;
@@ -227,9 +269,7 @@ export function createRules() {
       slots[ci] = [];
     }
 
-    // проверка на появление супер-полки после каждого мержа
     addSuperShelf();
-
     scheduleSpawn();
     return true;
   }
