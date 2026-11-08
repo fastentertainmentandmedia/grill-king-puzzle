@@ -33,7 +33,7 @@ export const gameConfig = {
   // add — сколько полок добавить при выполнении условия.
   // ----------------------------------------------------------
   SHELF_GROWTH: [
-    { score: 0, combo: 5, add: 1, spawnPerStep: 4 },
+    { score: 0, combo: 4, add: 1, spawnPerStep: 4 },
   ],
   SHELF_MAX: 4,
 
@@ -42,12 +42,12 @@ export const gameConfig = {
   SPAWN_DELAY_MS:     180,
   MAX_ITEMS_ON_FIELD: 28,
 
-  COMBO_BASE_DURATION_MS:        6000,
-  COMBO_MIN_DURATION_MS:         1200,
-  COMBO_SPEEDUP_PER_LEVEL:       0.06,
-  COMBO_SPEEDUP_PER_SCORE_BONUS: 0.02,
-  COMBO_SCORE_STEP:              150,
-  COMBO_BASE_POINTS:             12,
+  COMBO_BASE_DURATION_MS:        8000,
+  COMBO_MIN_DURATION_MS:         2500,
+  COMBO_SPEEDUP_PER_LEVEL:       0.04,
+  COMBO_SPEEDUP_PER_SCORE_BONUS: 0.015,
+  COMBO_SCORE_STEP:              200,
+  COMBO_BASE_POINTS:             10,
 
   // ----------------------------------------------------------
   // Тексты HUD
