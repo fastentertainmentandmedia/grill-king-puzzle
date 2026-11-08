@@ -8,7 +8,7 @@
 
 export const gameConfig = {
   STORAGE_KEY: 'grill_king_puzzle',
-  PLAY_LIMIT_MINUTES: 1,
+  PLAY_LIMIT_MINUTES: 5,
   LIMIT_RESET_HOURS: 4,
 
   ASSETS: {
