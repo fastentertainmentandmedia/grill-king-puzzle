@@ -30,10 +30,6 @@ export function createRenderer(container) {
         cell.className = 'cell';
         cell.dataset.index = String(idx);
 
-        const bars = document.createElement('div');
-        bars.className = 'grill-bars';
-        cell.appendChild(bars);
-
         const itemsWrap = document.createElement('div');
         itemsWrap.className = 'cell-items';
         itemsWrap.style.gridTemplateColumns = `repeat(${cfg.PLACES_PER_CELL}, 1fr)`;

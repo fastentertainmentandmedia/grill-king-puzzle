@@ -122,6 +122,7 @@ a:hover, a:active, a:focus {
     inset 0 0 0 3px #ffb86b;
 }
 
+
 /* статичные угли — без анимации, без blend-mode, без blur */
 .cell::before {
   content: "";
@@ -129,33 +130,21 @@ a:hover, a:active, a:focus {
   inset: 0;
   z-index: 1;
   background: radial-gradient(ellipse at 50% 50%,
-    #ff7b1a 0%,
-    #8c1500 45%,
-    #1a0600 100%);
+  #3a1a0c 0%,
+  #2a1208 50%,
+  #1a0600 100%);
 }
 
-.grill-bars {
+.cell.drag-over::after {
+  content: "";
   position: absolute;
   inset: 0;
-  z-index: 2;
+  z-index: 5;
+  background: rgba(255, 160, 60, 0.2);
+  box-shadow: inset 0 0 0 3px #ffb86b;
   pointer-events: none;
-  background-image:
-    repeating-linear-gradient(0deg,
-      transparent 0px, transparent 9px,
-      #2a2e32 9px,
-      #b8c0c5 11px,
-      #2a2e32 13px,
-      transparent 13px, transparent 22px),
-    repeating-linear-gradient(90deg,
-      transparent 0px, transparent 26px,
-      #2a2e32 26px,
-      #b8c0c5 28px,
-      #2a2e32 30px,
-      transparent 30px, transparent 56px);
-  box-shadow:
-    inset 0 0 0 1px #0a0c0e;
-  opacity: 0.95;
 }
+
 
 /* ============================================================
    [BLOCK: item / анимации мержа]

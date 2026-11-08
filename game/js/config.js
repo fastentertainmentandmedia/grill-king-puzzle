@@ -80,7 +80,7 @@ export const gameConfig = {
     { id: 'shwarma',  src: 'game/assets/food/shwarma.png', weight: 5, padding: 0.05, scale: 1.2 },
     // средние
     { id: 'gyros',    src: 'game/assets/food/gyros.png',   weight: 4, padding: 0.05, scale: 1 },
-    { id: 'kebab',    src: 'game/assets/food/kebab.svg',   weight: 3, padding: 0.05, scale: 1.6},
+    { id: 'kebab',    src: 'game/assets/food/kebab.svg',   weight: 3, padding: 0.05, scale: 1.7},
     // редкие (напитки/соусы)
     { id: 'ketchup',  src: 'game/assets/food/ketchup.png', weight: 2, padding: 0.05, scale: 1.5 },
     { id: 'coke',     src: 'game/assets/food/coke.png',    weight: 2, padding: 0.05, scale: 1.4 },
