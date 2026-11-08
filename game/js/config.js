@@ -48,7 +48,7 @@ export const gameConfig = {
   // ----------------------------------------------------------
   // Комбо
   // ----------------------------------------------------------
-  COMBO_BASE_DURATION_MS:        8000,
+  COMBO_BASE_DURATION_MS:        9000,
   COMBO_MIN_DURATION_MS:         1000,
   COMBO_SPEEDUP_PER_LEVEL:       0.05,
   COMBO_SPEEDUP_PER_SCORE_BONUS: 0.03,

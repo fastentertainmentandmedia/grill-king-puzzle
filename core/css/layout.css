@@ -24,7 +24,7 @@
 }
 
 /* ============================================================
-   [BLOCK: header — [таймер/комбо] | лого | [очки/комбо]
+   [BLOCK: header — [таймер/очки] | лого | [комбо/комбо-бар]
    ============================================================ */
 
 .header {
@@ -163,7 +163,6 @@
   -webkit-user-drag: element;
   user-select: auto;
   -webkit-user-select: auto;
-  will-change: transform;
   overflow: visible;
   touch-action: none;
 }
@@ -210,13 +209,12 @@
   pointer-events: none;
   z-index: 9998;
   animation: flashExpand 0.5s ease-out forwards;
-  filter: blur(1px);
 }
 
 @keyframes flashExpand {
-  0%   { width: 8px;   height: 8px;   margin-left: -4px;   margin-top: -4px;   opacity: 1; }
+  0%   { transform: translate(-50%, -50%) scale(0.2); opacity: 1; }
   60%  { opacity: 1; }
-  100% { width: 180px; height: 180px; margin-left: -90px; margin-top: -90px; opacity: 0; }
+  100% { transform: translate(-50%, -50%) scale(6); opacity: 0; }
 }
 
 .merge-ring {
@@ -236,8 +234,8 @@
 }
 
 @keyframes ringExpand {
-  0%   { width: 16px;   height: 16px;   margin-left: -8px;   margin-top: -8px;   opacity: 0.95; border-width: 3px; }
-  100% { width: 200px;  height: 200px;  margin-left: -100px; margin-top: -100px; opacity: 0;    border-width: 1px; }
+  0%   { transform: translate(-50%, -50%) scale(0.5); opacity: 0.95; border-width: 3px; }
+  100% { transform: translate(-50%, -50%) scale(6);   opacity: 0;    border-width: 1px; }
 }
 
 .spark {
@@ -255,8 +253,8 @@
 }
 
 @keyframes sparkFly {
-  0%   { transform: translate(0, 0) scale(1); opacity: 1; }
-  100% { transform: translate(var(--dx), var(--dy)) scale(0.2); opacity: 0; }
+  0%   { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+  100% { transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(0.2); opacity: 0; }
 }
 
 .item.match-pop { animation: popOut 0.3s ease forwards; }
@@ -435,23 +433,10 @@
   position: absolute;
   left: 0; top: 0; bottom: 0;
   width: 100%;
-  border-radius: 8px;
+  border-radius: 0;
   transform-origin: left center;
   transform: scaleX(0);
   transition: none;
-}
-
-.combo-wrap.visible .combo-bar-fill {
-  animation: comboPulse 0.7s ease-in-out infinite alternate;
-}
-
-.combo-wrap.fast .combo-bar-fill {
-  animation: comboPulse 0.35s ease-in-out infinite alternate;
-}
-
-@keyframes comboPulse {
-  0%   { filter: brightness(1); }
-  100% { filter: brightness(1.35); }
 }
 
 .combo-label {
@@ -499,15 +484,6 @@
 }
 
 .combo-wrap.active-glow .combo-glow { opacity: 1; }
-
-.combo-wrap.combo-flash .combo-bar-fill {
-  animation: comboFlash 0.4s ease-out;
-}
-
-@keyframes comboFlash {
-  0%   { filter: brightness(2); box-shadow: 0 0 20px #ff7a00; }
-  100% { filter: brightness(1); }
-}
 
 /* ============================================================
    [BLOCK: адаптив
