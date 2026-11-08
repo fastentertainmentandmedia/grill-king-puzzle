@@ -44,9 +44,9 @@ export const gameConfig = {
 
   COMBO_BASE_DURATION_MS:        8000,
   COMBO_MIN_DURATION_MS:         2500,
-  COMBO_SPEEDUP_PER_LEVEL:       0.04,
-  COMBO_SPEEDUP_PER_SCORE_BONUS: 0.015,
-  COMBO_SCORE_STEP:              200,
+  COMBO_SPEEDUP_PER_LEVEL:       0.025,
+  COMBO_SPEEDUP_PER_SCORE_BONUS: 0.008,
+  COMBO_SCORE_STEP:              250,
   COMBO_BASE_POINTS:             10,
 
   // ----------------------------------------------------------
@@ -73,18 +73,18 @@ export const gameConfig = {
   // ----------------------------------------------------------
   FOOD_TYPES: [
     // основные — высокий вес (часто, легко матчатся)
-    { id: 'burger',   src: 'game/assets/food/burger.png',  weight: 3, padding: 0.1 },
-    { id: 'hotdog',   src: 'game/assets/food/hotdog.png', weight: 5, padding: 0.1 },
-    { id: 'doner',    src: 'game/assets/food/doner.png',   weight: 5, padding: 0.03 },
-    { id: 'fries',    src: 'game/assets/food/fries.svg',   weight: 4, padding: 0.03 },
-    { id: 'shwarma',  src: 'game/assets/food/shwarma.png', weight: 5, padding: 0.05 },
+    { id: 'burger',   src: 'game/assets/food/burger.png',  weight: 3, padding: 0.05, scale: 1 },
+    { id: 'hotdog',   src: 'game/assets/food/hotdog.png', weight: 5, padding: 0.05, scale: 1 },
+    { id: 'doner',    src: 'game/assets/food/doner.png',   weight: 5, padding: 0.05, scale: 1.2 },
+    { id: 'fries',    src: 'game/assets/food/fries.svg',   weight: 4, padding: 0.05, scale: 1.4},
+    { id: 'shwarma',  src: 'game/assets/food/shwarma.png', weight: 5, padding: 0.05, scale: 1.2 },
     // средние
-    { id: 'gyros',    src: 'game/assets/food/gyros.png',   weight: 4, padding: 0.05 },
-    { id: 'kebab',    src: 'game/assets/food/kebab.svg',   weight: 3, padding: 0.01, scale: 1.3},
+    { id: 'gyros',    src: 'game/assets/food/gyros.png',   weight: 4, padding: 0.05, scale: 1 },
+    { id: 'kebab',    src: 'game/assets/food/kebab.svg',   weight: 3, padding: 0.05, scale: 1.6},
     // редкие (напитки/соусы)
-    { id: 'ketchup',  src: 'game/assets/food/ketchup.png', weight: 2, padding: 0.05, scale: 1.2 },
-    { id: 'coke',     src: 'game/assets/food/coke.png',    weight: 2, padding: 0.05, scale: 1.2 },
-    { id: 'water',    src: 'game/assets/food/water.png',   weight: 2, padding: 0.03 },
+    { id: 'ketchup',  src: 'game/assets/food/ketchup.png', weight: 2, padding: 0.05, scale: 1.5 },
+    { id: 'coke',     src: 'game/assets/food/coke.png',    weight: 2, padding: 0.05, scale: 1.4 },
+    { id: 'water',    src: 'game/assets/food/water.png',   weight: 2, padding: 0.05, scale: 1.4 },
   ],
 
   // Fit для <img>-режима (аналог INGREDIENT_FIT_*)
